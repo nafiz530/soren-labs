@@ -34,14 +34,11 @@ function useCanvas(draw:(ctx:CanvasRenderingContext2D,w:number,h:number,t:number
 }
 function Grid({ctx,w,h}:{ctx:CanvasRenderingContext2D;w:number;h:number}){ctx.strokeStyle="#e8ebef";ctx.lineWidth=1;for(let x=0;x<w;x+=40){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,h);ctx.stroke()}for(let y=0;y<h;y+=40){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(w,y);ctx.stroke()}}
 function Range({label,value,min,max,step=1,onChange,unit=""}:{label:string;value:number;min:number;max:number;step?:number;onChange:(v:number)=>void;unit?:string}){return <label className="control"><span>{label}<b>{value}{unit}</b></span><input type="range" min={min} max={max} step={step} value={value} onChange={e=>onChange(+e.target.value)}/></label>}
-function Stage({children,controls,readout}:{children:ReactNode;controls:ReactNode;readout?:ReactNode}){return <div className="lab-stage"><div className="visual">{children}</div>{readout&&<div className="readout">{readout}</div>}<div className="controls">{controls}</div></div>}
+function Stage({children,controls,readout}:{children:ReactNode;controls?:ReactNode;readout?:ReactNode}){return <div className="lab-stage"><div className="visual">{children}</div>{readout&&<div className="readout">{readout}</div>}{controls&&<div className="controls">{controls}</div>}</div>}
 
-function Projectile(){const[speed,setSpeed]=useState(24),[angle,setAngle]=useState(45),[g,setG]=useState(9.8);
- const ref=useCanvas((ctx,w,h)=>{Grid({ctx,w,h});const a=angle*Math.PI/180,range=speed*speed*Math.sin(2*a)/g,maxY=speed*speed*Math.sin(a)**2/(2*g),scale=Math.min((w-70)/Math.max(range,1),(h-70)/Math.max(maxY,1))*.8;ctx.strokeStyle="#5662d9";ctx.lineWidth=4;ctx.beginPath();for(let x=0;x<=range;x+=Math.max(range/100,.01)){const y=x*Math.tan(a)-g*x*x/(2*speed*speed*Math.cos(a)**2),px=35+x*scale,py=h-30-y*scale;x?ctx.lineTo(px,py):ctx.moveTo(px,py)}ctx.stroke()},[speed,angle,g]);
- return <Stage><canvas ref={ref}/><>{null}</><div/></Stage> as never}
 function ProjectileLab(){const[speed,setSpeed]=useState(24),[angle,setAngle]=useState(45),[g,setG]=useState(9.8);const range=speed*speed*Math.sin(2*angle*Math.PI/180)/g;
  const ref=useCanvas((ctx,w,h)=>{Grid({ctx,w,h});const a=angle*Math.PI/180,maxY=speed*speed*Math.sin(a)**2/(2*g),scale=Math.min((w-70)/Math.max(range,1),(h-70)/Math.max(maxY,1))*.8;ctx.strokeStyle="#5662d9";ctx.lineWidth=4;ctx.beginPath();for(let x=0;x<=range;x+=Math.max(range/100,.01)){const y=x*Math.tan(a)-g*x*x/(2*speed*speed*Math.cos(a)**2),px=35+x*scale,py=h-30-y*scale;x?ctx.lineTo(px,py):ctx.moveTo(px,py)}ctx.stroke()},[speed,angle,g]);
- return <Stage><canvas ref={ref}/><div/><div/></Stage> as never}
+ return <Stage><canvas ref={ref}/></Stage>}
 function PhysicsLab({id}:{id:string}){const[a,setA]=useState(id==="waves"?35:30),[b,setB]=useState(id==="ohm"?10:2),[c,setC]=useState(5);
  const ref=useCanvas((ctx,w,h,t)=>{Grid({ctx,w,h});ctx.strokeStyle="#5662d9";ctx.lineWidth=4;
   if(id==="newton"){const acc=Math.max(0,(a-c)/Math.max(b,1));const x=30+(acc*t*t*18)%(w-100);ctx.fillStyle="#5662d9";ctx.fillRect(x,h/2-28,56,56);ctx.fillStyle="#111";ctx.font="15px system-ui";ctx.fillText("F = ma",x+9,h/2+5)}
@@ -50,7 +47,7 @@ function PhysicsLab({id}:{id:string}){const[a,setA]=useState(id==="waves"?35:30)
   else {for(let x=0;x<w;x+=2){const y=h/2+a*Math.sin(x*.012*b-t*3);x?ctx.lineTo(x,y):ctx.moveTo(x,y)}ctx.stroke()}
  },[id,a,b,c]);
  const labels=id==="newton"?["Force","Mass","Friction"]:id==="ohm"?["Voltage","Resistance","Extra"]:id==="optics"?["Object distance","Focal length","Ray height"]:["Amplitude","Frequency","Wave speed"];
- return <Stage readout={id==="newton"?<>Acceleration <b>{Math.max(0,(a-c)/Math.max(b,1)).toFixed(2)} m/s²</b></>:id==="ohm"?<>Current <b>{(a/Math.max(b,.1)).toFixed(2)} A</b> · Power <b>{(a*a/Math.max(b,.1)).toFixed(1)} W</b></>:<>Adjust the variables and observe the model.</>}><canvas ref={ref}/><div/><div/></Stage>
+ return <Stage readout={id==="newton"?<>Acceleration <b>{Math.max(0,(a-c)/Math.max(b,1)).toFixed(2)} m/s²</b></>:id==="ohm"?<>Current <b>{(a/Math.max(b,.1)).toFixed(2)} A</b> · Power <b>{(a*a/Math.max(b,.1)).toFixed(1)} W</b></>:<>Adjust the variables and observe the model.</>} controls={<><Range label={labels[0]} value={a} min={1} max={id==="newton"?60:id==="ohm"?12:100} onChange={setA}/><Range label={labels[1]} value={b} min={1} max={id==="newton"?20:id==="ohm"?30:100} onChange={setB}/><Range label={labels[2]} value={c} min={0} max={100} onChange={setC}/></>}><canvas ref={ref}/></Stage>
 }
 function ChemistryLab({id}:{id:string}){const[a,setA]=useState(8),[b,setB]=useState(16),[c,setC]=useState(50);
  const ref=useCanvas((ctx,w,h,t)=>{Grid({ctx,w,h});const cx=w/2,cy=h/2;ctx.strokeStyle="#dfe3e8";ctx.lineWidth=2;
@@ -59,7 +56,7 @@ function ChemistryLab({id}:{id:string}){const[a,setA]=useState(8),[b,setB]=useSt
   else if(id==="ph"){const grad=ctx.createLinearGradient(40,0,w-40,0);grad.addColorStop(0,"#d33");grad.addColorStop(.5,"#fff");grad.addColorStop(1,"#5662d9");ctx.fillStyle=grad;ctx.fillRect(40,cy-25,w-80,50);const ph=clamp(7+(b-a)/15,0,14);ctx.fillStyle="#111";ctx.beginPath();ctx.arc(40+ph/14*(w-80),cy,10,0,7);ctx.fill()}
   else {for(let i=0;i<Math.round(10+c/5);i++){const x=(i*73+t*(20+c/4))%w,y=(i*47+t*15)%h;ctx.fillStyle=i%2?"#5662d9":"#111";ctx.beginPath();ctx.arc(x,y,5,0,7);ctx.fill()}}
  },[id,a,b,c]);
- return <Stage readout={id==="atom"?<>Protons <b>{a}</b> · Neutrons <b>{Math.max(0,b-a)}</b> · Electrons <b>{a}</b></>:id==="ph"?<>pH <b>{clamp(7+(b-a)/15,0,14).toFixed(1)}</b></>:<>Interactive model · change the conditions and observe.</>}><canvas ref={ref}/><div/><div/></Stage>
+ return <Stage readout={id==="atom"?<>Protons <b>{a}</b> · Neutrons <b>{Math.max(0,b-a)}</b> · Electrons <b>{a}</b></>:id==="ph"?<>pH <b>{clamp(7+(b-a)/15,0,14).toFixed(1)}</b></>:<>Interactive model · change the conditions and observe.</>} controls={<><Range label="Primary variable" value={a} min={1} max={id==="atom"?20:100} onChange={setA}/><Range label="Secondary variable" value={b} min={1} max={id==="atom"?40:100} onChange={setB}/><Range label="Condition" value={c} min={0} max={100} onChange={setC}/></>}><canvas ref={ref}/></Stage>
 }
 function BiologyLab({id}:{id:string}){const[level,setLevel]=useState(60);const ref=useCanvas((ctx,w,h,t)=>{const cx=w/2,cy=h/2;ctx.lineWidth=4;ctx.strokeStyle="#5662d9";ctx.fillStyle="#eef0ff";
  if(id==="cell"){ctx.beginPath();ctx.ellipse(cx,cy,w*.28,h*.32,0,0,7);ctx.fill();ctx.stroke();ctx.fillStyle="#5662d9";ctx.beginPath();ctx.arc(cx,cy,40,0,7);ctx.fill();for(let i=0;i<8;i++){ctx.fillStyle="#111";ctx.beginPath();ctx.ellipse(cx+Math.cos(i*2.7+t*.1)*w*.17,cy+Math.sin(i*2.7+t*.1)*h*.2,12,7,i,0,7);ctx.fill()}}
@@ -67,7 +64,7 @@ function BiologyLab({id}:{id:string}){const[level,setLevel]=useState(60);const r
  else if(id==="lungs"){ctx.beginPath();ctx.ellipse(cx-75,cy,68,112,0,0,7);ctx.ellipse(cx+75,cy,68,112,0,0,7);ctx.fill();ctx.stroke();ctx.strokeStyle="#5662d9";ctx.lineWidth=7;ctx.beginPath();ctx.moveTo(cx,cy-145);ctx.lineTo(cx,cy-55);ctx.lineTo(cx-55,cy-10);ctx.moveTo(cx,cy-55);ctx.lineTo(cx+55,cy-10);ctx.stroke()}
  else if(id==="neuron"){ctx.strokeStyle="#5662d9";ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(70,cy);ctx.lineTo(cx-30,cy);ctx.lineTo(cx+45,cy-20);ctx.lineTo(w-70,cy-20);ctx.stroke();ctx.fillStyle="#111";ctx.beginPath();ctx.arc(cx,cy,28,0,7);ctx.fill();for(let i=0;i<8;i++){ctx.fillStyle=i<level/13?"#5662d9":"#ccd1d8";ctx.beginPath();ctx.arc(80+i*(w-160)/7,cy,7,0,7);ctx.fill()}}
  else {ctx.strokeStyle="#5662d9";ctx.lineWidth=6;ctx.beginPath();ctx.moveTo(cx,cy+120);ctx.lineTo(cx,cy-100);ctx.stroke();for(let i=0;i<6;i++){ctx.fillStyle="#dfe6cf";ctx.beginPath();ctx.ellipse(cx+(i%2?1:-1)*(35+i*14),cy-35-i*20,44,17,i%2?.5:-.5,0,7);ctx.fill();ctx.stroke()}}
- },[id,level]);return <Stage readout={<>Condition level <b>{level}%</b> · Observe how the biological system responds.</>}><canvas ref={ref}/><div/><div/></Stage>}
+ },[id,level]);return <Stage readout={<>Condition level <b>{level}%</b> · Observe how the biological system responds.</>} controls={<Range label={id==="heart"?"Heart rate":id==="lungs"?"Breathing depth":id==="neuron"?"Stimulus strength":"Activity / light"} value={level} min={0} max={100} onChange={setLevel} unit="%" />}><canvas ref={ref}/></Stage>}
 
 function LabSimulation({lab}:{lab:Lab}){if(lab.id==="projectile")return <ProjectileLab/>;if(lab.subject==="Physics")return <PhysicsLab id={lab.id}/>;if(lab.subject==="Chemistry")return <ChemistryLab id={lab.id}/>;return <BiologyLab id={lab.id}/>}
 
