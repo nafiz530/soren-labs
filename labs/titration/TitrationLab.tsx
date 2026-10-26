@@ -1166,13 +1166,15 @@ export default function TitrationLab() {
 
           <div className="scene-frame" data-nudge="scene">
             <TitrationScene live={live} quality={quality} onInteract={onSceneInteract} cameraCmd={cameraCmd} onZoom={handleZoomReport} />
+          </div>
+          <div className="scene-caption-row">
             <div className="scene-chip"><span>●</span> Student-controlled experiment</div>
             <div className="scene-legend"><span><i className="legend-orange" /> Titrant</span><span><i className="legend-purple" /> Indicator solution</span><span><i className="legend-pink" /> Pink flash</span></div>
-            <div className={`coach-bar tone-${coach.tone}`} aria-live="polite">
-              <span className="coach-icon" aria-hidden="true">{coach.tone === 'warn' ? '⚠' : coach.tone === 'good' ? '◉' : '✦'}</span>
-              <p>{coach.line}</p>
-              <span className="coach-step">{Math.min(mentorIndex + 1, MENTOR_STEPS.length)}/{MENTOR_STEPS.length}</span>
-            </div>
+          </div>
+          <div className={`coach-bar tone-${coach.tone}`} aria-live="polite">
+            <span className="coach-icon" aria-hidden="true">{coach.tone === 'warn' ? '⚠' : coach.tone === 'good' ? '◉' : '✦'}</span>
+            <p>{coach.line}</p>
+            <span className="coach-step">{Math.min(mentorIndex + 1, MENTOR_STEPS.length)}/{MENTOR_STEPS.length}</span>
           </div>
           <div className="scene-footnote"><span>ⓘ</span> 3D scene is a visual model; measurements follow the experiment's teaching model. Sound is synthesized live — no headphones required, but they help.</div>
 
