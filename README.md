@@ -6,7 +6,7 @@ Soren Labs is a mobile-first virtual laboratory project focused on making scienc
 
 ## Project status
 
-The repository is initialized with the web application foundation. No experiment projects are included yet.
+The shared web foundation is in place, and the first benchmark experiment — an interactive acid–base titration lab — is available at `/labs/titration`.
 
 ## Technology
 
@@ -43,6 +43,10 @@ Connect this repository to Cloudflare Pages and use:
 | Root directory | `/` |
 
 The project is a static Vite application and does not require a server-side runtime to serve the initial page.
+
+## First experiment
+
+Open `/labs/titration` to explore the first interactive chemistry lab. It includes a PlayCanvas 3D scene, titrant dispensing controls, live readings, an observation log, theory notes, reset controls, and adaptive rendering-resolution settings. The chemistry readings use a documented idealized strong-acid/strong-base teaching model; the 3D liquid appearance is illustrative.
 
 ## Design and performance principles
 
