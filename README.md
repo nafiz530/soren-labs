@@ -46,7 +46,7 @@ The project is a static Vite application and does not require a server-side runt
 
 ## First experiment
 
-Open `/labs/titration` to explore the first interactive chemistry lab. It includes a PlayCanvas 3D scene, titrant dispensing controls, live readings, an observation log, theory notes, reset controls, and adaptive rendering-resolution settings. The chemistry readings use a documented idealized strong-acid/strong-base teaching model; the 3D liquid appearance is illustrative.
+Open `/labs/titration` to explore the first interactive chemistry lab. It includes a detailed procedural PlayCanvas scene with drag-to-orbit and scroll-to-zoom inspection, titrant dispensing controls, live readings, an observation log, theory notes, reset controls, and adaptive rendering-resolution settings. The chemistry readings use a documented idealized strong-acid/strong-base teaching model; the 3D liquid appearance is illustrative.
 
 ## Design and performance principles
 

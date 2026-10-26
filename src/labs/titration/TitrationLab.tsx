@@ -11,17 +11,18 @@ function TitrationScene({ volume, endpoint, running, quality }: { volume: number
   const endpointRef = useRef(endpoint);
   const runningRef = useRef(running);
   const qualityRef = useRef(quality);
-  const [autoScale, setAutoScale] = useState(() => typeof window === 'undefined' ? 0.85 : (window.devicePixelRatio > 2 ? 0.72 : 0.88));
+  const [autoScale, setAutoScale] = useState(() => typeof window === 'undefined' ? 0.8 : (window.devicePixelRatio > 2 ? 0.64 : 0.82));
+  const autoScaleRef = useRef(autoScale);
 
   useEffect(() => { volumeRef.current = volume; }, [volume]);
   useEffect(() => { endpointRef.current = endpoint; }, [endpoint]);
   useEffect(() => { runningRef.current = running; }, [running]);
   useEffect(() => { qualityRef.current = quality; }, [quality]);
+  useEffect(() => { autoScaleRef.current = autoScale; }, [autoScale]);
 
   useEffect(() => {
     const canvas = hostRef.current;
     if (!canvas) return;
-
     let app: pc.Application;
     try {
       app = new pc.Application(canvas, {
@@ -33,144 +34,184 @@ function TitrationScene({ volume, endpoint, running, quality }: { volume: number
     appRef.current = app;
     app.setCanvasFillMode(pc.FILLMODE_NONE);
     app.setCanvasResolution(pc.RESOLUTION_AUTO);
-    app.scene.ambientLight = new pc.Color(0.55, 0.59, 0.66);
+    app.scene.ambientLight = new pc.Color(0.34, 0.40, 0.49);
 
+    const target = new pc.Vec3(0, 1.02, 0);
+    let cameraAngle = 0.12;
+    let cameraDistance = 8.9;
+    let cameraHeight = 3.5;
     const camera = new pc.Entity('Camera');
-    camera.addComponent('camera', { clearColor: new pc.Color(0.91, 0.94, 0.97), fov: 38, nearClip: 0.1, farClip: 100 });
-    camera.setPosition(0, 3.2, 8.8);
-    camera.lookAt(0, 1.2, 0);
+    camera.addComponent('camera', { clearColor: new pc.Color(0.075, 0.105, 0.15), fov: 34, nearClip: 0.1, farClip: 100 });
+    const placeCamera = () => {
+      camera.setPosition(Math.sin(cameraAngle) * cameraDistance, cameraHeight, Math.cos(cameraAngle) * cameraDistance);
+      camera.lookAt(target);
+    };
+    placeCamera();
     app.root.addChild(camera);
 
-    const addLight = (name: string, type: 'directional' | 'omni', position: [number, number, number], intensity: number, color: pc.Color) => {
-      const light = new pc.Entity(name);
-      light.addComponent('light', { type, intensity, color, castShadows: qualityRef.current === 'high', range: 18 });
-      light.setPosition(...position);
-      if (type === 'directional') light.lookAt(0, 0, 0);
-      app.root.addChild(light);
-    };
-    addLight('Key light', 'directional', [-3, 7, 4], 1.35, new pc.Color(1, 0.91, 0.79));
-    addLight('Fill light', 'omni', [4, 4, 2], 0.75, new pc.Color(0.73, 0.84, 1));
-
-    const material = (color: pc.Color, opts: { metalness?: number; gloss?: number; opacity?: number } = {}) => {
+    const makeMaterial = (color: pc.Color, options: { metalness?: number; gloss?: number; opacity?: number; emissive?: pc.Color } = {}) => {
       const mat = new pc.StandardMaterial();
       mat.diffuse = color;
-      mat.metalness = opts.metalness ?? 0;
-      mat.gloss = opts.gloss ?? 0.45;
-      if (opts.opacity !== undefined) {
-        mat.opacity = opts.opacity;
+      mat.metalness = options.metalness ?? 0;
+      mat.gloss = options.gloss ?? 0.55;
+      if (options.emissive) mat.emissive = options.emissive;
+      if (options.opacity !== undefined) {
+        mat.opacity = options.opacity;
         mat.blendType = pc.BLEND_NORMAL;
         mat.depthWrite = false;
       }
       mat.update();
       return mat;
     };
-    const addShape = (name: string, type: 'box' | 'cylinder' | 'sphere' | 'cone', pos: [number, number, number], scale: [number, number, number], mat: pc.StandardMaterial, rot?: [number, number, number]) => {
+    const add = (name: string, type: 'box' | 'cylinder' | 'sphere' | 'cone', position: [number, number, number], scale: [number, number, number], mat: pc.StandardMaterial, rotation?: [number, number, number]) => {
       const entity = new pc.Entity(name);
-      entity.addComponent('render', { type, material: mat, castShadows: true, receiveShadows: true });
-      entity.setPosition(...pos);
+      entity.addComponent('render', { type, material: mat, castShadows: false, receiveShadows: false });
+      entity.setPosition(...position);
       entity.setLocalScale(...scale);
-      if (rot) entity.setEulerAngles(...rot);
+      if (rotation) entity.setEulerAngles(...rotation);
       app.root.addChild(entity);
       return entity;
     };
+    const addLight = (name: string, type: 'directional' | 'omni', position: [number, number, number], intensity: number, color: pc.Color) => {
+      const light = new pc.Entity(name);
+      light.addComponent('light', { type, intensity, color, range: 18 });
+      light.setPosition(...position);
+      if (type === 'directional') light.lookAt(0, 0, 0);
+      app.root.addChild(light);
+    };
+    addLight('Warm key light', 'directional', [-3.5, 7, 4.5], 1.25, new pc.Color(1, 0.83, 0.68));
+    addLight('Cool fill light', 'omni', [4.5, 4.2, 2.5], 0.85, new pc.Color(0.55, 0.72, 1));
+    addLight('Rim light', 'omni', [-1, 3.5, -3], 0.65, new pc.Color(0.43, 0.83, 1));
 
-    const benchMat = material(new pc.Color(0.83, 0.86, 0.89), { gloss: 0.25 });
-    const steelMat = material(new pc.Color(0.53, 0.60, 0.67), { metalness: 0.72, gloss: 0.82 });
-    const glassMat = material(new pc.Color(0.77, 0.88, 0.94), { gloss: 0.95, opacity: 0.24 });
-    const liquidMat = material(new pc.Color(0.91, 0.40, 0.20), { gloss: 0.78, opacity: 0.88 });
-    const flaskLiquidMat = material(new pc.Color(0.92, 0.78, 0.93), { gloss: 0.72, opacity: 0.72 });
-    const darkMat = material(new pc.Color(0.18, 0.23, 0.29), { metalness: 0.25 });
-    const whiteMat = material(new pc.Color(0.97, 0.98, 0.99), { gloss: 0.3 });
+    const benchMat = makeMaterial(new pc.Color(0.17, 0.22, 0.29), { gloss: 0.32, metalness: 0.15 });
+    const edgeMat = makeMaterial(new pc.Color(0.32, 0.40, 0.49), { metalness: 0.45, gloss: 0.78 });
+    const steelMat = makeMaterial(new pc.Color(0.58, 0.67, 0.76), { metalness: 0.78, gloss: 0.88 });
+    const darkMat = makeMaterial(new pc.Color(0.07, 0.10, 0.15), { metalness: 0.3, gloss: 0.72 });
+    const glassMat = makeMaterial(new pc.Color(0.73, 0.86, 0.96), { gloss: 0.98, opacity: 0.22 });
+    const glassHighlight = makeMaterial(new pc.Color(0.88, 0.96, 1), { gloss: 0.98, opacity: 0.65, emissive: new pc.Color(0.12, 0.17, 0.22) });
+    const buretteLiquidMat = makeMaterial(new pc.Color(0.96, 0.43, 0.18), { gloss: 0.88, opacity: 0.92 });
+    const acidLiquidMat = makeMaterial(new pc.Color(0.73, 0.78, 0.95), { gloss: 0.86, opacity: 0.88 });
+    const pinkLiquidMat = makeMaterial(new pc.Color(0.97, 0.32, 0.66), { gloss: 0.88, opacity: 0.9, emissive: new pc.Color(0.08, 0.015, 0.045) });
+    const labelMat = makeMaterial(new pc.Color(0.90, 0.94, 0.97), { gloss: 0.25 });
+    const ledMat = makeMaterial(new pc.Color(0.22, 0.92, 0.69), { emissive: new pc.Color(0.1, 0.45, 0.25), gloss: 0.8 });
 
-    addShape('Laboratory worktop', 'box', [0, -0.16, 0], [8, 0.32, 4.6], benchMat);
-    addShape('Front bench edge', 'box', [0, -0.36, 2.15], [8, 0.12, 0.12], whiteMat);
+    add('Workbench slab', 'box', [0, -0.16, 0], [8.2, 0.34, 4.8], benchMat);
+    add('Workbench front trim', 'box', [0, -0.34, 2.36], [8.2, 0.08, 0.08], edgeMat);
+    add('Workbench side trim', 'box', [-4.06, -0.34, 0], [0.08, 0.08, 4.72], edgeMat);
+    add('Back wall', 'box', [0, 2.45, -2.55], [8.2, 5.3, 0.12], darkMat);
+    add('Back wall light rail', 'box', [0, 3.95, -2.46], [7.2, 0.035, 0.04], edgeMat);
+    add('Wall rail left indicator', 'sphere', [-3.25, 3.95, -2.4], [0.055, 0.055, 0.055], ledMat);
+    add('Wall rail right indicator', 'sphere', [3.25, 3.95, -2.4], [0.055, 0.055, 0.055], ledMat);
+    for (let i = -3; i <= 3; i++) add('Bench seam ' + i, 'box', [i * 0.98, 0.013, 0.05], [0.012, 0.006, 3.9], edgeMat);
 
-    // Burette stand, clamp and graduated glass tube.
-    addShape('Stand base', 'box', [-1.45, 0.08, -0.28], [1.05, 0.15, 0.75], steelMat);
-    addShape('Stand rod', 'cylinder', [-1.45, 1.55, -0.28], [0.055, 3.0, 0.055], steelMat);
-    addShape('Clamp arm', 'box', [-0.96, 2.52, -0.28], [1.05, 0.09, 0.12], darkMat);
-    addShape('Burette glass', 'cylinder', [-0.42, 1.74, -0.28], [0.14, 1.9, 0.14], glassMat);
-    const buretteSolution = addShape('Burette solution', 'cylinder', [-0.42, 1.78, -0.28], [0.088, 1.58, 0.088], liquidMat);
-    for (let i = 0; i <= 10; i++) {
-      addShape('Burette graduation ' + i, 'box', [-0.32, 2.48 - i * 0.145, -0.195], [i % 5 === 0 ? 0.11 : 0.06, 0.012, 0.012], darkMat);
+    add('Stand foot', 'box', [-1.65, 0.08, -0.38], [1.0, 0.14, 0.68], steelMat);
+    add('Stand foot inset', 'box', [-1.65, 0.156, -0.38], [0.62, 0.025, 0.43], darkMat);
+    add('Stand vertical rod', 'cylinder', [-1.65, 1.63, -0.38], [0.065, 3.0, 0.065], steelMat);
+    add('Clamp crossbar', 'box', [-1.02, 2.55, -0.38], [1.35, 0.09, 0.14], steelMat);
+    add('Clamp jaw left', 'box', [-0.59, 2.46, -0.38], [0.08, 0.18, 0.13], darkMat);
+    add('Clamp jaw right', 'box', [-0.38, 2.46, -0.38], [0.08, 0.18, 0.13], darkMat);
+    add('Clamp screw', 'cylinder', [-0.95, 2.55, -0.27], [0.07, 0.22, 0.07], darkMat, [0, 0, 90]);
+    add('Burette glass tube', 'cylinder', [-0.48, 1.72, -0.38], [0.15, 1.95, 0.15], glassMat);
+    const buretteSolution = add('Burette solution', 'cylinder', [-0.48, 1.78, -0.38], [0.083, 1.56, 0.083], buretteLiquidMat);
+    add('Burette highlight', 'box', [-0.535, 1.75, -0.298], [0.018, 1.72, 0.012], glassHighlight);
+    for (let i = 0; i <= 20; i++) {
+      const y = 2.53 - i * 0.077;
+      add('Burette graduation ' + i, 'box', [-0.37, y, -0.286], [i % 5 === 0 ? 0.105 : 0.055, 0.012, 0.012], darkMat);
     }
-    addShape('Stopcock body', 'box', [-0.42, 0.73, -0.28], [0.28, 0.09, 0.12], steelMat);
-    addShape('Stopcock handle', 'box', [-0.42, 0.73, -0.18], [0.08, 0.28, 0.07], darkMat);
-    addShape('Burette tip', 'cone', [-0.42, 0.53, -0.28], [0.065, 0.27, 0.065], glassMat);
+    add('Burette top rim', 'cylinder', [-0.48, 2.72, -0.38], [0.17, 0.035, 0.17], glassMat);
+    add('Stopcock body', 'box', [-0.48, 0.68, -0.38], [0.28, 0.09, 0.14], steelMat);
+    add('Stopcock handle', 'box', [-0.48, 0.68, -0.25], [0.07, 0.25, 0.07], darkMat);
+    add('Burette tip', 'cone', [-0.48, 0.48, -0.38], [0.065, 0.24, 0.065], glassMat);
+    add('Tip highlight', 'box', [-0.49, 0.49, -0.345], [0.012, 0.16, 0.012], glassHighlight);
 
-    // Conical flask: glass body, neck, solution and rim.
-    addShape('Flask base', 'cylinder', [0.45, 0.12, 0.18], [1.0, 0.12, 0.82], glassMat);
-    addShape('Flask body', 'cone', [0.45, 0.67, 0.18], [1.08, 1.12, 0.9], glassMat, [0, 0, 0]);
-    addShape('Flask neck', 'cylinder', [0.45, 1.38, 0.18], [0.27, 0.48, 0.27], glassMat);
-    addShape('Flask rim', 'cylinder', [0.45, 1.63, 0.18], [0.34, 0.07, 0.34], glassMat);
-    addShape('Flask solution', 'cylinder', [0.45, 0.42, 0.18], [0.70, 0.12, 0.58], flaskLiquidMat);
-    addShape('Flask foot', 'cylinder', [0.45, 0.055, 0.18], [1.0, 0.08, 0.82], glassMat);
+    add('Flask glass body', 'cone', [0.55, 0.68, 0.16], [1.12, 1.15, 0.92], glassMat);
+    add('Flask foot ring', 'cylinder', [0.55, 0.13, 0.16], [0.93, 0.08, 0.78], glassMat);
+    add('Flask neck', 'cylinder', [0.55, 1.39, 0.16], [0.28, 0.48, 0.28], glassMat);
+    add('Flask mouth rim', 'cylinder', [0.55, 1.65, 0.16], [0.34, 0.055, 0.34], glassMat);
+    const flaskSolution = add('Flask liquid', 'cylinder', [0.55, 0.39, 0.16], [0.64, 0.13, 0.54], acidLiquidMat);
+    add('Flask liquid meniscus', 'cylinder', [0.55, 0.455, 0.16], [0.61, 0.018, 0.51], acidLiquidMat);
+    add('Flask left reflection', 'box', [0.23, 0.76, 0.63], [0.025, 0.72, 0.018], glassHighlight, [0, 0, -23]);
+    add('Flask neck reflection', 'box', [0.48, 1.39, 0.31], [0.018, 0.34, 0.015], glassHighlight);
+    add('Flask calibration mark', 'box', [0.55, 1.12, 0.315], [0.24, 0.012, 0.012], steelMat);
 
-    // Small dropper and nearby reagent bottle.
-    addShape('Reagent bottle', 'cylinder', [2.15, 0.48, -0.35], [0.43, 0.82, 0.43], glassMat);
-    addShape('Reagent liquid', 'cylinder', [2.15, 0.32, -0.35], [0.34, 0.38, 0.34], flaskLiquidMat);
-    addShape('Bottle cap', 'cylinder', [2.15, 0.94, -0.35], [0.22, 0.14, 0.22], darkMat);
-    addShape('Label', 'box', [2.15, 0.53, -0.125], [0.29, 0.25, 0.012], whiteMat);
+    add('Reagent bottle body', 'cylinder', [2.18, 0.47, -0.3], [0.43, 0.78, 0.43], glassMat);
+    add('Reagent bottle solution', 'cylinder', [2.18, 0.31, -0.3], [0.34, 0.36, 0.34], buretteLiquidMat);
+    add('Reagent bottle shoulder', 'cone', [2.18, 0.88, -0.3], [0.31, 0.18, 0.31], glassMat);
+    add('Reagent bottle neck', 'cylinder', [2.18, 0.99, -0.3], [0.2, 0.14, 0.2], glassMat);
+    add('Reagent bottle cap', 'cylinder', [2.18, 1.08, -0.3], [0.23, 0.08, 0.23], darkMat);
+    add('Reagent label', 'box', [2.18, 0.51, -0.075], [0.28, 0.22, 0.012], labelMat);
+    add('Balance base', 'box', [2.1, 0.025, 1.18], [1.18, 0.12, 0.78], darkMat);
+    add('Balance pan', 'box', [2.1, 0.095, 1.18], [0.84, 0.025, 0.55], steelMat);
+    add('Balance screen', 'box', [2.1, 0.105, 0.78], [0.56, 0.018, 0.12], ledMat);
+    add('Balance display bezel', 'box', [2.1, 0.095, 0.77], [0.68, 0.04, 0.18], darkMat);
 
-    // Worktop measurement card and gentle backdrop.
-    addShape('Back wall', 'box', [0, 2.05, -2.15], [8, 4.4, 0.12], whiteMat);
-    addShape('Back panel', 'box', [0, 2.3, -2.06], [7.8, 2.8, 0.035], material(new pc.Color(0.91, 0.94, 0.97)));
-    addShape('Digital scale', 'box', [2.0, 0.03, 1.1], [1.15, 0.12, 0.72], darkMat);
-    addShape('Scale display', 'box', [2.0, 0.105, 1.1], [0.66, 0.025, 0.2], material(new pc.Color(0.70, 0.86, 0.77)));
-
-    let time = 0;
-    let frameCount = 0;
-    let sampleTime = 0;
-    let lastEndpoint = false;
+    const drop = add('Falling titrant drop', 'sphere', [-0.48, 0.4, -0.3], [0.045, 0.065, 0.045], buretteLiquidMat);
+    drop.enabled = false;
+    let time = 0, frameCount = 0, sampleTime = 0, lastEndpoint = false, lastVolume = -1, dropStartedAt = -10;
     const onUpdate = (dt: number) => {
-      time += dt;
-      frameCount += 1;
-      sampleTime += dt;
+      time += dt; frameCount += 1; sampleTime += dt;
       if (sampleTime >= 2) {
         const fps = frameCount / sampleTime;
         if (qualityRef.current === 'auto') {
-          if (fps < 28) setAutoScale((value) => Math.max(0.58, Number((value - 0.08).toFixed(2))));
-          else if (fps > 52) setAutoScale((value) => Math.min(1, Number((value + 0.03).toFixed(2))));
+          if (fps < 27) setAutoScale((value) => Math.max(0.52, Number((value - 0.08).toFixed(2))));
+          else if (fps > 52) setAutoScale((value) => Math.min(0.92, Number((value + 0.025).toFixed(3))));
         }
-        frameCount = 0;
-        sampleTime = 0;
+        frameCount = 0; sampleTime = 0;
       }
       const delivered = volumeRef.current;
-      const remaining = Math.max(0.18, 1.58 - delivered / 30 * 1.35);
-      buretteSolution.setLocalScale(0.088, remaining, 0.088);
-      buretteSolution.setPosition(-0.42, 0.94 + remaining / 2, -0.28);
+      if (delivered !== lastVolume) {
+        if (lastVolume >= 0 && delivered > lastVolume) dropStartedAt = time;
+        lastVolume = delivered;
+      }
+      const remaining = Math.max(0.12, 1.56 - delivered / 30 * 1.32);
+      buretteSolution.setLocalScale(0.083, remaining, 0.083);
+      buretteSolution.setPosition(-0.48, 0.94 + remaining / 2, -0.38);
+      const liquidHeight = 0.13 + Math.min(0.13, delivered / 30 * 0.13);
+      flaskSolution.setLocalScale(0.64, liquidHeight, 0.54);
+      flaskSolution.setPosition(0.55, 0.31 + liquidHeight / 2, 0.16);
       if (lastEndpoint !== endpointRef.current) {
         lastEndpoint = endpointRef.current;
-        flaskLiquidMat.diffuse = lastEndpoint ? new pc.Color(0.89, 0.34, 0.65) : new pc.Color(0.92, 0.78, 0.93);
-        flaskLiquidMat.update();
+        flaskSolution.render!.meshInstances[0].material = lastEndpoint ? pinkLiquidMat : acidLiquidMat;
       }
-      // Animate a single falling drop only while the student is dispensing.
-      const drop = app.root.findByName('Falling drop');
-      if (runningRef.current && volumeRef.current > 0 && !endpointRef.current) {
-        if (!drop) {
-          const d = addShape('Falling drop', 'sphere', [-0.42, 0.43, -0.28], [0.045, 0.07, 0.045], liquidMat);
-          d.enabled = true;
-        } else {
-          const phase = (time * 1.8) % 1;
-          drop.setPosition(-0.42, 0.49 - phase * 0.38, -0.12 + phase * 0.15);
-        }
-      } else if (drop) {
-        drop.enabled = false;
+      drop.enabled = time - dropStartedAt < 0.52 && runningRef.current;
+      if (drop.enabled) {
+        const phase = Math.min(1, (time - dropStartedAt) / 0.52);
+        drop.setPosition(-0.48, 0.43 - phase * 0.31, -0.22 + phase * 0.14);
       }
-      // Gentle camera breathing is intentionally omitted for accessibility and battery life.
     };
     app.on('update', onUpdate);
     app.start();
 
-    let lastWidth = 0;
-    let lastHeight = 0;
+    let dragging = false, lastX = 0, lastY = 0;
+    const pointerDown = (event: PointerEvent) => {
+      dragging = true; lastX = event.clientX; lastY = event.clientY;
+      canvas.setPointerCapture?.(event.pointerId);
+    };
+    const pointerMove = (event: PointerEvent) => {
+      if (!dragging) return;
+      const dx = event.clientX - lastX, dy = event.clientY - lastY;
+      lastX = event.clientX; lastY = event.clientY;
+      cameraAngle += dx * 0.006;
+      cameraHeight = Math.max(2.5, Math.min(5.0, cameraHeight + dy * 0.012));
+      placeCamera();
+    };
+    const pointerUp = () => { dragging = false; };
+    const wheel = (event: WheelEvent) => {
+      event.preventDefault();
+      cameraDistance = Math.max(6.8, Math.min(11.2, cameraDistance + event.deltaY * 0.008));
+      placeCamera();
+    };
+    canvas.addEventListener('pointerdown', pointerDown);
+    canvas.addEventListener('pointermove', pointerMove);
+    canvas.addEventListener('pointerup', pointerUp);
+    canvas.addEventListener('pointercancel', pointerUp);
+    canvas.addEventListener('wheel', wheel, { passive: false });
+
+    const getScale = () => qualityRef.current === 'high' ? 1 : qualityRef.current === 'balanced' ? 0.82 : qualityRef.current === 'low' ? 0.55 : autoScaleRef.current;
     const resize = () => {
-      const rect = canvas.getBoundingClientRect();
-      if (rect.width !== lastWidth || rect.height !== lastHeight) {
-        lastWidth = rect.width;
-        lastHeight = rect.height;
-        app.resizeCanvas(Math.max(1, Math.round(rect.width)), Math.max(1, Math.round(rect.height)));
-      }
+      const rect = canvas.getBoundingClientRect(), scale = getScale();
+      app.graphicsDevice.maxPixelRatio = scale * (window.devicePixelRatio || 1);
+      app.resizeCanvas(Math.max(1, Math.round(rect.width * scale)), Math.max(1, Math.round(rect.height * scale)));
     };
     const observer = new ResizeObserver(resize);
     observer.observe(canvas);
@@ -178,6 +219,11 @@ function TitrationScene({ volume, endpoint, running, quality }: { volume: number
 
     return () => {
       observer.disconnect();
+      canvas.removeEventListener('pointerdown', pointerDown);
+      canvas.removeEventListener('pointermove', pointerMove);
+      canvas.removeEventListener('pointerup', pointerUp);
+      canvas.removeEventListener('pointercancel', pointerUp);
+      canvas.removeEventListener('wheel', wheel);
       app.off('update', onUpdate);
       app.destroy();
       appRef.current = null;
@@ -185,20 +231,15 @@ function TitrationScene({ volume, endpoint, running, quality }: { volume: number
   }, []);
 
   useEffect(() => {
-    const app = appRef.current;
-    if (!app) return;
-    const canvas = hostRef.current;
-    if (!canvas) return;
-    const scale = quality === 'high' ? 1 : quality === 'balanced' ? 0.85 : quality === 'low' ? 0.62 : autoScale;
-    const apply = () => {
-      const rect = canvas.getBoundingClientRect();
-      app.graphicsDevice.maxPixelRatio = scale * (window.devicePixelRatio || 1);
-      app.resizeCanvas(Math.max(1, Math.round(rect.width * scale)), Math.max(1, Math.round(rect.height * scale)));
-    };
-    apply();
+    const app = appRef.current, canvas = hostRef.current;
+    if (!app || !canvas) return;
+    const scale = quality === 'high' ? 1 : quality === 'balanced' ? 0.82 : quality === 'low' ? 0.55 : autoScale;
+    const rect = canvas.getBoundingClientRect();
+    app.graphicsDevice.maxPixelRatio = scale * (window.devicePixelRatio || 1);
+    app.resizeCanvas(Math.max(1, Math.round(rect.width * scale)), Math.max(1, Math.round(rect.height * scale)));
   }, [quality, autoScale]);
 
-  return <canvas ref={hostRef} className="titration-canvas" aria-label="Interactive 3D titration laboratory scene" />;
+  return <canvas ref={hostRef} className="titration-canvas" aria-label="Interactive 3D titration laboratory scene. Drag to orbit; scroll to zoom." />;
 }
 
 export default function TitrationLab() {
@@ -286,8 +327,8 @@ export default function TitrationLab() {
             <div className="panel-title"><div><span className="panel-kicker">YOUR HANDS, YOUR EXPERIMENT</span><h2>Operate the burette</h2></div><button className="text-button" onClick={reset}>Reset experiment ↺</button></div>
             <div className="burette-control">
               <div className="valve-illustration" aria-hidden="true"><div className="valve-track"><div className="valve-fill" style={{ height: `${Math.min(100, volume / 30 * 100)}%` }} /></div><div className="valve-handle" /></div>
-              <div className="burette-instructions"><strong>Stopcock control</strong><p>Tap to add titrant. Near the endpoint, dispense smaller drops for more accurate results.</p><div className="drop-row"><span>{drops} drops added</span><span>{volume.toFixed(2)} mL delivered</span></div></div>
-              <button className={endpoint ? 'dispense-button disabled' : 'dispense-button'} disabled={endpoint} onPointerDown={(e) => { e.preventDefault(); addDrop(); }}><span className="dispense-icon">＋</span><span>{endpoint ? 'Endpoint reached' : 'Add titrant'}</span><small>{volume >= 20 ? '0.1 mL per drop' : '0.5 mL per drop'}</small></button>
+              <div className="burette-instructions"><strong>Stopcock control</strong><p>Tap to add titrant. Near the endpoint, dispense smaller drops for more accurate results.</p><div className="drop-row"><span>{drops} dispenses</span><span>{volume.toFixed(2)} mL delivered</span></div></div>
+              <button className={endpoint ? 'dispense-button disabled' : 'dispense-button'} disabled={endpoint} onClick={addDrop}><span className="dispense-icon">＋</span><span>{endpoint ? 'Endpoint reached' : 'Add titrant'}</span><small>{volume >= 20 ? '0.1 mL per dispense' : '0.5 mL per dispense'}</small></button>
             </div>
           </div>
         </div>
@@ -305,7 +346,7 @@ export default function TitrationLab() {
               <button className={tab === 'procedure' ? 'active' : ''} onClick={() => setTab('procedure')}>Procedure</button><button className={tab === 'observations' ? 'active' : ''} onClick={() => setTab('observations')}>Observations</button><button className={tab === 'theory' ? 'active' : ''} onClick={() => setTab('theory')}>Theory</button>
             </div>
             {tab === 'procedure' && <div className="notes-content"><h3>What to do</h3><ol><li>Check the initial burette and flask setup.</li><li>Add titrant gradually using the control.</li><li>Watch the indicator and volume reading.</li><li>Stop when a faint pink endpoint persists.</li></ol>{showGuide && <div className="hint-box"><span>✦</span><p><strong>Lab tip</strong>Near the endpoint, add titrant in smaller amounts. In a real titration, the endpoint is judged by a persistent colour change.</p></div>}<button className="guide-toggle" onClick={() => setShowGuide((v) => !v)}>{showGuide ? 'Hide lab tip' : 'Show lab tip'}</button></div>}
-            {tab === 'observations' && <div className="notes-content"><h3>Your observation log</h3><div className="observation-row"><span>Volume added</span><strong>{volume.toFixed(2)} mL</strong></div><div className="observation-row"><span>Observed colour</span><strong>{endpoint ? 'Pink' : ph >= 8.2 ? 'Faint pink' : 'Colourless'}</strong></div><div className="observation-row"><span>Drop count</span><strong>{drops}</strong></div><p className="observation-note">Record the endpoint volume and compare repeated trials for accuracy.</p></div>}
+            {tab === 'observations' && <div className="notes-content"><h3>Your observation log</h3><div className="observation-row"><span>Volume added</span><strong>{volume.toFixed(2)} mL</strong></div><div className="observation-row"><span>Observed colour</span><strong>{endpoint ? 'Pink' : ph >= 8.2 ? 'Faint pink' : 'Colourless'}</strong></div><div className="observation-row"><span>Dispenses</span><strong>{drops}</strong></div><p className="observation-note">Record the endpoint volume and compare repeated trials for accuracy.</p></div>}
             {tab === 'theory' && <div className="notes-content"><h3>Why it works</h3><p>Titration determines an unknown concentration by reacting a measured volume of one solution with a solution of known concentration.</p><div className="equation">HCl + NaOH → NaCl + H₂O</div><p>For a 1:1 acid–base reaction, the equivalence point occurs when the reacting amounts are stoichiometrically equal. The equivalence point is near 25.00 mL for these equal-concentration solutions. The visible phenolphthalein endpoint appears just after equivalence, when the solution becomes faint pink.</p></div>}
           </section>
 
