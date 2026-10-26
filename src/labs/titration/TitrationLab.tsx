@@ -11,6 +11,7 @@ function TitrationScene({ volume, endpoint, running, quality }: { volume: number
   const endpointRef = useRef(endpoint);
   const runningRef = useRef(running);
   const qualityRef = useRef(quality);
+  const [autoScale, setAutoScale] = useState(() => typeof window === 'undefined' ? 0.85 : (window.devicePixelRatio > 2 ? 0.72 : 0.88));
 
   useEffect(() => { volumeRef.current = volume; }, [volume]);
   useEffect(() => { endpointRef.current = endpoint; }, [endpoint]);
@@ -120,15 +121,31 @@ function TitrationScene({ volume, endpoint, running, quality }: { volume: number
     addShape('Scale display', 'box', [2.0, 0.105, 1.1], [0.66, 0.025, 0.2], material(new pc.Color(0.70, 0.86, 0.77)));
 
     let time = 0;
+    let frameCount = 0;
+    let sampleTime = 0;
+    let lastEndpoint = false;
     const onUpdate = (dt: number) => {
       time += dt;
+      frameCount += 1;
+      sampleTime += dt;
+      if (sampleTime >= 2) {
+        const fps = frameCount / sampleTime;
+        if (qualityRef.current === 'auto') {
+          if (fps < 28) setAutoScale((value) => Math.max(0.58, Number((value - 0.08).toFixed(2))));
+          else if (fps > 52) setAutoScale((value) => Math.min(1, Number((value + 0.03).toFixed(2))));
+        }
+        frameCount = 0;
+        sampleTime = 0;
+      }
       const delivered = volumeRef.current;
       const remaining = Math.max(0.18, 1.58 - delivered / 30 * 1.35);
       buretteSolution.setLocalScale(0.088, remaining, 0.088);
       buretteSolution.setPosition(-0.42, 2.52 - remaining / 2, -0.28);
-      flaskLiquidMat.diffuse = endpointRef.current ? new pc.Color(0.89, 0.34, 0.65) : new pc.Color(0.92, 0.78, 0.93);
-      flaskLiquidMat.update();
-      flaskSolution.setPosition(0.45, 0.42, 0.18);
+      if (lastEndpoint !== endpointRef.current) {
+        lastEndpoint = endpointRef.current;
+        flaskLiquidMat.diffuse = lastEndpoint ? new pc.Color(0.89, 0.34, 0.65) : new pc.Color(0.92, 0.78, 0.93);
+        flaskLiquidMat.update();
+      }
       // Animate a single falling drop only while the student is dispensing.
       const drop = app.root.findByName('Falling drop');
       if (runningRef.current && volumeRef.current > 0 && !endpointRef.current) {
@@ -174,14 +191,14 @@ function TitrationScene({ volume, endpoint, running, quality }: { volume: number
     if (!app) return;
     const canvas = hostRef.current;
     if (!canvas) return;
-    const scale = quality === 'high' ? 1 : quality === 'balanced' ? 0.85 : quality === 'low' ? 0.68 : 0.9;
+    const scale = quality === 'high' ? 1 : quality === 'balanced' ? 0.85 : quality === 'low' ? 0.62 : autoScale;
     const apply = () => {
       const rect = canvas.getBoundingClientRect();
       app.graphicsDevice.maxPixelRatio = scale * (window.devicePixelRatio || 1);
       app.resizeCanvas(Math.max(1, Math.round(rect.width * scale)), Math.max(1, Math.round(rect.height * scale)));
     };
     apply();
-  }, [quality]);
+  }, [quality, autoScale]);
 
   return <canvas ref={hostRef} className="titration-canvas" aria-label="Interactive 3D titration laboratory scene" />;
 }
