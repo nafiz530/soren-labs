@@ -34,8 +34,6 @@ function TitrationScene({ volume, endpoint, running, quality }: { volume: number
     app.setCanvasFillMode(pc.FILLMODE_NONE);
     app.setCanvasResolution(pc.RESOLUTION_AUTO);
     app.scene.ambientLight = new pc.Color(0.55, 0.59, 0.66);
-    app.scene.gammaCorrection = pc.GAMMA_SRGB;
-    app.scene.toneMapping = pc.TONEMAP_ACES;
 
     const camera = new pc.Entity('Camera');
     camera.addComponent('camera', { clearColor: new pc.Color(0.91, 0.94, 0.97), fov: 38, nearClip: 0.1, farClip: 100 });
@@ -105,7 +103,7 @@ function TitrationScene({ volume, endpoint, running, quality }: { volume: number
     addShape('Flask body', 'cone', [0.45, 0.67, 0.18], [1.08, 1.12, 0.9], glassMat, [0, 0, 0]);
     addShape('Flask neck', 'cylinder', [0.45, 1.38, 0.18], [0.27, 0.48, 0.27], glassMat);
     addShape('Flask rim', 'cylinder', [0.45, 1.63, 0.18], [0.34, 0.07, 0.34], glassMat);
-    const flaskSolution = addShape('Flask solution', 'cylinder', [0.45, 0.42, 0.18], [0.70, 0.12, 0.58], flaskLiquidMat);
+    addShape('Flask solution', 'cylinder', [0.45, 0.42, 0.18], [0.70, 0.12, 0.58], flaskLiquidMat);
     addShape('Flask foot', 'cylinder', [0.45, 0.055, 0.18], [1.0, 0.08, 0.82], glassMat);
 
     // Small dropper and nearby reagent bottle.
