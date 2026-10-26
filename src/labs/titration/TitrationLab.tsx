@@ -211,7 +211,7 @@ function TitrationScene({ volume, endpoint, running, quality }: { volume: number
     const resize = () => {
       const rect = canvas.getBoundingClientRect(), scale = getScale();
       app.graphicsDevice.maxPixelRatio = scale * (window.devicePixelRatio || 1);
-      app.resizeCanvas(Math.max(1, Math.round(rect.width * scale)), Math.max(1, Math.round(rect.height * scale)));
+      app.resizeCanvas(Math.max(1, Math.round(rect.width)), Math.max(1, Math.round(rect.height)));
     };
     const observer = new ResizeObserver(resize);
     observer.observe(canvas);
@@ -236,7 +236,7 @@ function TitrationScene({ volume, endpoint, running, quality }: { volume: number
     const scale = quality === 'high' ? 1 : quality === 'balanced' ? 0.82 : quality === 'low' ? 0.55 : autoScale;
     const rect = canvas.getBoundingClientRect();
     app.graphicsDevice.maxPixelRatio = scale * (window.devicePixelRatio || 1);
-    app.resizeCanvas(Math.max(1, Math.round(rect.width * scale)), Math.max(1, Math.round(rect.height * scale)));
+    app.resizeCanvas(Math.max(1, Math.round(rect.width)), Math.max(1, Math.round(rect.height)));
   }, [quality, autoScale]);
 
   return <canvas ref={hostRef} className="titration-canvas" aria-label="Interactive 3D titration laboratory scene. Drag to orbit; scroll to zoom." />;
