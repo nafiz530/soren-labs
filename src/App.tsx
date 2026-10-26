@@ -22,7 +22,10 @@ const principles = [
 export default function App() {
   const [menuOpen, setMenuOpen] = useState(false);
 
-  if (window.location.pathname.replace(/\\/$/, '') === '/labs/titration') {
+  const currentPath = window.location.pathname.endsWith('/')
+    ? window.location.pathname.slice(0, -1)
+    : window.location.pathname;
+  if (currentPath === '/labs/titration') {
     return <TitrationLab />;
   }
 
