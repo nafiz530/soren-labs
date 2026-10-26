@@ -140,7 +140,7 @@ function TitrationScene({ volume, endpoint, running, quality }: { volume: number
       const delivered = volumeRef.current;
       const remaining = Math.max(0.18, 1.58 - delivered / 30 * 1.35);
       buretteSolution.setLocalScale(0.088, remaining, 0.088);
-      buretteSolution.setPosition(-0.42, 2.52 - remaining / 2, -0.28);
+      buretteSolution.setPosition(-0.42, 0.94 + remaining / 2, -0.28);
       if (lastEndpoint !== endpointRef.current) {
         lastEndpoint = endpointRef.current;
         flaskLiquidMat.diffuse = lastEndpoint ? new pc.Color(0.89, 0.34, 0.65) : new pc.Color(0.92, 0.78, 0.93);
