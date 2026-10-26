@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import TitrationLab from './labs/titration/TitrationLab';
 
 const principles = [
   {
@@ -21,6 +22,10 @@ const principles = [
 export default function App() {
   const [menuOpen, setMenuOpen] = useState(false);
 
+  if (window.location.pathname.replace(/\\/$/, '') === '/labs/titration') {
+    return <TitrationLab />;
+  }
+
   return (
     <main>
       <header className="site-header">
@@ -42,6 +47,7 @@ export default function App() {
 
         <nav className={menuOpen ? 'nav nav-open' : 'nav'} aria-label="Main navigation">
           <a href="#approach" onClick={() => setMenuOpen(false)}>Our approach</a>
+          <a href="/labs/titration" onClick={() => setMenuOpen(false)}>Try the first lab <span aria-hidden="true">↗</span></a>
           <a href="#principles" onClick={() => setMenuOpen(false)}>What matters</a>
           <a className="nav-cta" href="https://sorenchat.com/">Explore Soren Chat <span aria-hidden="true">↗</span></a>
         </nav>
@@ -55,7 +61,7 @@ export default function App() {
             A new way to explore science through hands-on virtual laboratories.
             Make a change, observe what happens, and discover the why behind it.
           </p>
-          <a className="primary-button" href="#principles">Discover our approach <span aria-hidden="true">↘</span></a>
+          <a className="primary-button" href="/labs/titration">Enter the first lab <span aria-hidden="true">↗</span></a>
           <p className="hero-note"><span aria-hidden="true">✳</span> Built for students. Designed for everyday devices.</p>
         </div>
 
@@ -121,10 +127,10 @@ export default function App() {
         <div className="closing-mark" aria-hidden="true">S</div>
         <div>
           <div className="eyebrow">THE FOUNDATION</div>
-          <h2>Built for every curious mind.</h2>
-          <p>The foundation is taking shape. The experiments will come next.</p>
+          <h2>Ready to try your first experiment?</h2>
+          <p>Our first interactive experiment is ready to explore.</p>
         </div>
-        <span className="closing-coordinate">RAJSHAHI · BANGLADESH<br />MADE FOR LEARNING</span>
+        <a className="closing-coordinate" href="/labs/titration">OPEN ACID–BASE TITRATION ↗<br />EXPERIMENT 001</a>
       </section>
 
       <footer className="site-footer">
