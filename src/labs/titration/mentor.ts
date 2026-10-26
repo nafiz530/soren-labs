@@ -158,3 +158,114 @@ export function fmtClock(seconds: number): string {
   const s = Math.floor(seconds % 60).toString().padStart(2, '0');
   return `${m}:${s}`;
 }
+
+/* ========================================================================== *
+ * Smart guidance ("nudge"): when the student is idle or clicking around
+ * without understanding, the lab animates a pointing hand over the exact
+ * control they should use next, and demonstrates the gesture itself.
+ * ========================================================================== */
+
+/** Which control the animated hand should point at. */
+export type NudgeTargetId = 'scene' | 'dispense' | 'swirl' | 'observations' | 'record' | 'reset';
+
+/** The gesture the animated hand performs to demonstrate the action. */
+export type NudgeGesture = 'press' | 'tap' | 'circle' | 'drag' | 'point';
+
+export interface NudgePlan {
+  target: NudgeTargetId;
+  gesture: NudgeGesture;
+  /** Short bold headline for the guidance bubble. */
+  title: string;
+  /** One-line instruction shown under the headline. */
+  line: string;
+}
+
+export interface NudgeState {
+  mentorIndex: number;
+  endpoint: boolean;
+  overshot: boolean;
+  trials: number;
+}
+
+/**
+ * Work out what to demonstrate right now. Returns null when the student is
+ * doing fine and there is nothing worth pointing at.
+ */
+export function nudgePlan(s: NudgeState): NudgePlan | null {
+  if (s.overshot) {
+    return {
+      target: 'reset',
+      gesture: 'point',
+      title: 'Too far past the endpoint',
+      line: 'The deep pink means you overshot. Reset the bench and try stopping one drop earlier.',
+    };
+  }
+  if (s.endpoint) {
+    return s.trials === 0
+      ? {
+          target: 'observations',
+          gesture: 'point',
+          title: 'You found the endpoint',
+          line: 'Open the Observations tab and record this trial before the moment escapes.',
+        }
+      : {
+          target: 'reset',
+          gesture: 'point',
+          title: 'Trial recorded — now repeat it',
+          line: 'Reset and run it again. Real chemists average three trials and compare the spread.',
+        };
+  }
+  switch (s.mentorIndex) {
+    case 0:
+      return {
+        target: 'scene',
+        gesture: 'drag',
+        title: 'Look around the bench first',
+        line: 'Drag the 3D scene sideways to orbit the camera and inspect the apparatus.',
+      };
+    case 1:
+      return {
+        target: 'dispense',
+        gesture: 'press',
+        title: 'Open the stopcock',
+        line: 'Press and HOLD this button — titrant flows only while your finger keeps it down.',
+      };
+    case 2:
+      return {
+        target: 'swirl',
+        gesture: 'circle',
+        title: 'Swirl the flask',
+        line: 'Drag in circles on this round pad — the way you would rotate a real flask.',
+      };
+    case 3:
+      return {
+        target: 'dispense',
+        gesture: 'press',
+        title: 'Keep the stream going',
+        line: 'Hold the stopcock again and let the titrant run steadily toward 20 mL.',
+      };
+    case 4:
+      return {
+        target: 'dispense',
+        gesture: 'tap',
+        title: 'Slow down — drop by drop',
+        line: 'Short taps only now: each press delivers just 0.1 mL past 20 mL.',
+      };
+    case 5:
+      return {
+        target: 'dispense',
+        gesture: 'tap',
+        title: 'Hunt the permanent pink',
+        line: 'One tap, then swirl. Stop the moment pink survives the swirl.',
+      };
+    case 6:
+      return {
+        target: 'observations',
+        gesture: 'point',
+        title: 'Record your trial',
+        line: 'Open Observations and record this endpoint, then reset and repeat.',
+      };
+    default:
+      return null;
+  }
+}

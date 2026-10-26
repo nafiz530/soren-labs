@@ -4,11 +4,13 @@ import * as pc from 'playcanvas';
 import { labSound } from './audio';
 import TitrationCurve from './pHChart';
 import type { CurvePoint } from './pHChart';
-import { BADGES, MENTOR_STEPS, coachLine, fmtClock } from './mentor';
-import type { TrialRecord } from './mentor';
+import { BADGES, MENTOR_STEPS, coachLine, fmtClock, nudgePlan } from './mentor';
+import type { NudgeGesture, NudgePlan, TrialRecord } from './mentor';
 import './titration.css';
 
 type SceneQuality = 'auto' | 'high' | 'balanced' | 'low';
+
+type CameraCmd = 'in' | 'out' | 'home';
 
 /** Live experiment values the 3D scene reads every frame (kept out of React re-renders). */
 interface LiveState {
@@ -35,21 +37,30 @@ function TitrationScene({
   live,
   quality,
   onInteract,
+  cameraCmd,
+  onZoom,
 }: {
   live: { current: LiveState };
   quality: SceneQuality;
   onInteract: () => void;
+  cameraCmd: { current: (cmd: CameraCmd) => void };
+  onZoom: (pct: number) => void;
 }) {
   const hostRef = useRef<HTMLCanvasElement | null>(null);
   const appRef = useRef<pc.Application | null>(null);
   const qualityRef = useRef(quality);
   const interactRef = useRef(onInteract);
+  const onZoomRef = useRef(onZoom);
+  const scaleRef = useRef(0.85);
+  const resizerRef = useRef<(() => void) | null>(null);
   const [autoScale, setAutoScale] = useState(() =>
     typeof window === 'undefined' ? 0.85 : window.devicePixelRatio > 2 ? 0.72 : 0.88,
   );
 
   useEffect(() => { qualityRef.current = quality; }, [quality]);
   useEffect(() => { interactRef.current = onInteract; }, [onInteract]);
+  useEffect(() => { onZoomRef.current = onZoom; }, [onZoom]);
+  useEffect(() => { scaleRef.current = autoScale; }, [autoScale]);
 
   useEffect(() => {
     const canvas = hostRef.current;
@@ -68,54 +79,138 @@ function TitrationScene({
     app.setCanvasResolution(pc.RESOLUTION_AUTO);
     app.scene.ambientLight = new pc.Color(0.55, 0.59, 0.66);
 
-    // --- camera with hand-driven orbit (drag the scene to look around) ------
+    // --- camera: hand-driven orbit + wheel / pinch / button zoom -------------
+    const HOME_PITCH = 0.21;
+    const MIN_DIST = 4.6;
+    const MAX_DIST = 15;
+    const HOME_DIST = 9;
     const camTarget = new pc.Vec3(0, 1.5, 0);
-    const camDist = 9.0;
     let yaw = 0;
-    let pitch = 0.21;
+    let pitch = HOME_PITCH;
     let targetYaw = 0;
-    let targetPitch = 0.21;
+    let targetPitch = HOME_PITCH;
+    let dist = HOME_DIST;
+    let targetDist = HOME_DIST;
 
     const camera = new pc.Entity('Camera');
     camera.addComponent('camera', { clearColor: new pc.Color(0.91, 0.94, 0.97), fov: 38, nearClip: 0.1, farClip: 100 });
     app.root.addChild(camera);
 
     const applyCamera = () => {
-      const x = camTarget.x + camDist * Math.sin(yaw) * Math.cos(pitch);
-      const y = camTarget.y + camDist * Math.sin(pitch);
-      const z = camTarget.z + camDist * Math.cos(yaw) * Math.cos(pitch);
+      const x = camTarget.x + dist * Math.sin(yaw) * Math.cos(pitch);
+      const y = camTarget.y + dist * Math.sin(pitch);
+      const z = camTarget.z + dist * Math.cos(yaw) * Math.cos(pitch);
       camera.setPosition(x, y, z);
       camera.lookAt(camTarget);
     };
     applyCamera();
 
+    const resetView = () => {
+      targetYaw = 0;
+      targetPitch = HOME_PITCH;
+      targetDist = HOME_DIST;
+      interactRef.current();
+    };
+
+    // One pointer orbits the camera; two pointers pinch-zoom. A bare tap
+    // (no drag) deliberately does not count as "inspecting the apparatus".
+    const pointers = new Map<number, { x: number; y: number }>();
     let dragging = false;
+    let dragTravel = 0;
     let lastX = 0;
     let lastY = 0;
+    let pinchPrev = 0;
+
+    const pinchDistance = () => {
+      const pts = [...pointers.values()];
+      return Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
+    };
+
     const onPointerDown = (e: PointerEvent) => {
-      dragging = true;
-      lastX = e.clientX;
-      lastY = e.clientY;
-      interactRef.current();
+      pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (pointers.size === 2) {
+        dragging = false;
+        pinchPrev = pinchDistance();
+      } else if (pointers.size === 1) {
+        dragging = true;
+        dragTravel = 0;
+        lastX = e.clientX;
+        lastY = e.clientY;
+      }
       try { canvas.setPointerCapture(e.pointerId); } catch { /* pointer not active (synthetic events) */ }
     };
     const onPointerMove = (e: PointerEvent) => {
+      if (!pointers.has(e.pointerId)) return;
+      pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (pointers.size >= 2) {
+        const span = pinchDistance();
+        if (pinchPrev > 0 && span > 0) {
+          const factor = span / pinchPrev;
+          targetDist = clamp(targetDist / factor, MIN_DIST, MAX_DIST);
+        }
+        pinchPrev = span;
+        return;
+      }
       if (!dragging) return;
       const dx = e.clientX - lastX;
       const dy = e.clientY - lastY;
       lastX = e.clientX;
       lastY = e.clientY;
+      dragTravel += Math.abs(dx) + Math.abs(dy);
+      if (dragTravel > 14) interactRef.current();
       targetYaw = clamp(targetYaw - dx * 0.0045, -0.85, 0.85);
       targetPitch = clamp(targetPitch + dy * 0.0035, 0.08, 0.55);
     };
     const onPointerUp = (e: PointerEvent) => {
-      dragging = false;
+      pointers.delete(e.pointerId);
+      if (pointers.size === 1) {
+        // Pinch ended but a finger is still down — resume orbiting from it.
+        const rest = [...pointers.values()][0];
+        dragging = true;
+        lastX = rest.x;
+        lastY = rest.y;
+        pinchPrev = 0;
+      } else if (pointers.size === 0) {
+        dragging = false;
+      }
       if (canvas.hasPointerCapture(e.pointerId)) canvas.releasePointerCapture(e.pointerId);
     };
+
+    const onWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      const d = e.deltaMode === WheelEvent.DOM_DELTA_LINE ? e.deltaY * 33
+        : e.deltaMode === WheelEvent.DOM_DELTA_PAGE ? e.deltaY * 300
+        : e.deltaY;
+      targetDist = clamp(targetDist * (1 + d * 0.0011), MIN_DIST, MAX_DIST);
+      interactRef.current();
+    };
+    const onDblClick = (e: MouseEvent) => {
+      e.preventDefault();
+      resetView();
+    };
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === '+' || e.key === '=') targetDist = clamp(targetDist - 0.9, MIN_DIST, MAX_DIST);
+      else if (e.key === '-' || e.key === '_') targetDist = clamp(targetDist + 0.9, MIN_DIST, MAX_DIST);
+      else if (e.key === '0') resetView();
+      else return;
+      e.preventDefault();
+      interactRef.current();
+    };
+
     canvas.addEventListener('pointerdown', onPointerDown);
     canvas.addEventListener('pointermove', onPointerMove);
     canvas.addEventListener('pointerup', onPointerUp);
     canvas.addEventListener('pointercancel', onPointerUp);
+    canvas.addEventListener('wheel', onWheel, { passive: false });
+    canvas.addEventListener('dblclick', onDblClick);
+    canvas.addEventListener('keydown', onKeyDown);
+
+    // Toolbar zoom buttons drive the same camera through this command hook.
+    cameraCmd.current = (cmd: CameraCmd) => {
+      if (cmd === 'in') targetDist = clamp(targetDist - 1.3, MIN_DIST, MAX_DIST);
+      else if (cmd === 'out') targetDist = clamp(targetDist + 1.3, MIN_DIST, MAX_DIST);
+      else resetView();
+    };
 
     const addLight = (name: string, type: 'directional' | 'omni', position: [number, number, number], intensity: number, color: pc.Color) => {
       const light = new pc.Entity(name);
@@ -274,6 +369,7 @@ function TitrationScene({
     let streamClock = 0;
     let flaskSpin = 0;
     let stopcockOpen = false;
+    let lastZoomPct = 100;
 
     const colourless = new pc.Color(0.87, 0.91, 0.95);
     const pink = new pc.Color(0.90, 0.36, 0.66);
@@ -391,51 +487,170 @@ function TitrationScene({
         bloom.mat.update();
       }
 
-      // Smoothly follow the hand-driven orbit target.
+      // Smoothly follow the hand-driven orbit target and zoom level.
       yaw += (targetYaw - yaw) * Math.min(1, dt * 7);
       pitch += (targetPitch - pitch) * Math.min(1, dt * 7);
+      dist += (targetDist - dist) * Math.min(1, dt * 6);
       applyCamera();
+      // Report magnification (zoom-in = larger %) once it changes by ~4%.
+      const pct = Math.round((HOME_DIST / dist) * 100);
+      if (Math.abs(pct - lastZoomPct) >= 4) {
+        lastZoomPct = pct;
+        onZoomRef.current(pct);
+      }
     };
     app.on('update', onUpdate);
     app.start();
 
-    let lastWidth = 0;
-    let lastHeight = 0;
-    const resize = () => {
-      const rect = canvas.getBoundingClientRect();
-      if (rect.width !== lastWidth || rect.height !== lastHeight) {
-        lastWidth = rect.width;
-        lastHeight = rect.height;
-        app.resizeCanvas(Math.max(1, Math.round(rect.width)), Math.max(1, Math.round(rect.height)));
-      }
+    // --- responsive buffer sizing (the shrink fix) ---------------------------
+    // Resize ONLY the drawing buffer via graphicsDevice. The Application-level
+    // app.resizeCanvas() pins inline px styles onto the canvas, which used to
+    // shrink the scene every time auto-quality lowered the render scale: the
+    // ResizeObserver then locked the smaller size in. The canvas keeps its
+    // stylesheet size (100% of the scene frame) and we observe the frame.
+    const frame = canvas.parentElement ?? canvas;
+    const qualityScale = () =>
+      qualityRef.current === 'high' ? 1
+      : qualityRef.current === 'balanced' ? 0.85
+      : qualityRef.current === 'low' ? 0.62
+      : scaleRef.current;
+    const applyBuffer = () => {
+      const rect = frame.getBoundingClientRect();
+      const w = Math.max(1, Math.round(rect.width));
+      const h = Math.max(1, Math.round(rect.height));
+      app.graphicsDevice.maxPixelRatio = qualityScale() * (window.devicePixelRatio || 1);
+      app.graphicsDevice.resizeCanvas(w, h);
     };
-    const observer = new ResizeObserver(resize);
-    observer.observe(canvas);
-    resize();
+    resizerRef.current = applyBuffer;
+    const observer = new ResizeObserver(() => applyBuffer());
+    observer.observe(frame);
+    // Browser zoom / device pixel ratio changes (also fires on rotation).
+    let dprDebounce = 0;
+    const onWindowResize = () => {
+      window.clearTimeout(dprDebounce);
+      dprDebounce = window.setTimeout(applyBuffer, 120);
+    };
+    window.addEventListener('resize', onWindowResize);
+    applyBuffer();
 
     return () => {
       observer.disconnect();
+      window.removeEventListener('resize', onWindowResize);
+      window.clearTimeout(dprDebounce);
+      resizerRef.current = null;
+      cameraCmd.current = () => { /* scene unmounted */ };
       canvas.removeEventListener('pointerdown', onPointerDown);
       canvas.removeEventListener('pointermove', onPointerMove);
       canvas.removeEventListener('pointerup', onPointerUp);
       canvas.removeEventListener('pointercancel', onPointerUp);
+      canvas.removeEventListener('wheel', onWheel);
+      canvas.removeEventListener('dblclick', onDblClick);
+      canvas.removeEventListener('keydown', onKeyDown);
       app.off('update', onUpdate);
       app.destroy();
       appRef.current = null;
     };
   }, []);
 
+  // Quality / auto-scale changes only affect the buffer resolution — never
+  // the CSS size of the canvas, so the scene can no longer shrink itself.
   useEffect(() => {
-    const app = appRef.current;
-    const canvas = hostRef.current;
-    if (!app || !canvas) return;
-    const scale = quality === 'high' ? 1 : quality === 'balanced' ? 0.85 : quality === 'low' ? 0.62 : autoScale;
-    const rect = canvas.getBoundingClientRect();
-    app.graphicsDevice.maxPixelRatio = scale * (window.devicePixelRatio || 1);
-    app.resizeCanvas(Math.max(1, Math.round(rect.width * scale)), Math.max(1, Math.round(rect.height * scale)));
+    resizerRef.current?.();
   }, [quality, autoScale]);
 
-  return <canvas ref={hostRef} className="titration-canvas" aria-label="Interactive 3D titration laboratory scene — drag to look around" />;
+  return (
+    <canvas
+      ref={hostRef}
+      className="titration-canvas"
+      tabIndex={0}
+      aria-label="Interactive 3D titration laboratory scene — drag to orbit, scroll or pinch to zoom, double-tap to reset the view"
+    />
+  );
+}
+
+/* ========================================================================== *
+ * NudgeLayer: an animated pointing hand that demonstrates the exact gesture
+ * the student should perform, over the exact control they should use. It
+ * re-anchors itself every animation frame, so it survives scrolling and
+ * layout changes (mobile keyboard, rotating the device, tab switches).
+ * ========================================================================== */
+
+const GESTURE_HAND: Record<NudgeGesture, string> = {
+  press: '👇',
+  tap: '👇',
+  circle: '👉',
+  drag: '👉',
+  point: '👉',
+};
+
+function NudgeLayer({
+  plan,
+  getTarget,
+  onDismiss,
+}: {
+  plan: NudgePlan;
+  getTarget: () => HTMLElement | null;
+  onDismiss: () => void;
+}) {
+  const ringRef = useRef<HTMLDivElement | null>(null);
+  const handRef = useRef<HTMLDivElement | null>(null);
+  const bubbleRef = useRef<HTMLDivElement | null>(null);
+  const scrolledRef = useRef(false);
+
+  useEffect(() => {
+    let raf = 0;
+    const place = () => {
+      const el = getTarget();
+      if (el) {
+        const r = el.getBoundingClientRect();
+        if (!scrolledRef.current) {
+          scrolledRef.current = true;
+          const inView = r.top >= 0 && r.bottom <= window.innerHeight;
+          if (!inView) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        const ring = ringRef.current;
+        if (ring) {
+          ring.style.left = `${r.left - 6}px`;
+          ring.style.top = `${r.top - 6}px`;
+          ring.style.width = `${Math.max(36, r.width + 12)}px`;
+          ring.style.height = `${Math.max(36, r.height + 12)}px`;
+        }
+        const hand = handRef.current;
+        if (hand) {
+          hand.style.left = `${r.left + r.width / 2 - 24}px`;
+          hand.style.top = `${r.top + r.height / 2 - 24}px`;
+        }
+        const bubble = bubbleRef.current;
+        if (bubble) {
+          const bw = bubble.offsetWidth || 230;
+          const bh = bubble.offsetHeight || 96;
+          const left = clamp(r.left + r.width / 2 - bw / 2, 10, Math.max(10, window.innerWidth - bw - 10));
+          let top = r.bottom + 14;
+          if (top + bh > window.innerHeight - 12) top = r.top - bh - 14;
+          if (top < 10) top = Math.min(window.innerHeight - bh - 12, r.bottom + 14);
+          bubble.style.left = `${left}px`;
+          bubble.style.top = `${Math.max(10, top)}px`;
+        }
+      }
+      raf = requestAnimationFrame(place);
+    };
+    raf = requestAnimationFrame(place);
+    return () => cancelAnimationFrame(raf);
+  }, [getTarget]);
+
+  return (
+    <div className="nudge-layer" role="status" aria-live="polite">
+      <div className="nudge-ring" ref={ringRef} aria-hidden="true" />
+      <div className={`nudge-hand gesture-${plan.gesture}`} ref={handRef} aria-hidden="true">
+        <span>{GESTURE_HAND[plan.gesture]}</span>
+      </div>
+      <div className="nudge-bubble" ref={bubbleRef}>
+        <strong>{plan.title}</strong>
+        <p>{plan.line}</p>
+        <button type="button" className="nudge-dismiss" onClick={onDismiss}>Got it — dismiss</button>
+      </div>
+    </div>
+  );
 }
 
 const readPref = (key: string, fallback: boolean) => {
@@ -471,6 +686,8 @@ export default function TitrationLab() {
   const [soundOn, setSoundOn] = useState(() => readPref('sorenlab-sound', true));
   const [soundLevel, setSoundLevel] = useState(0.75);
   const [history, setHistory] = useState<CurvePoint[]>([{ v: 0, ph: 1.0 }]);
+  const [zoomPct, setZoomPct] = useState(100);
+  const [nudge, setNudge] = useState<{ plan: NudgePlan; token: number } | null>(null);
 
   const timerRef = useRef<number | null>(null);
   const holdRef = useRef<number | null>(null);
@@ -482,6 +699,26 @@ export default function TitrationLab() {
   const prevMentor = useRef(-1);
   const padRef = useRef<HTMLDivElement | null>(null);
   const swirlState = useRef({ angle: null as number | null, accum: 0, turns: 0, lastSlosh: 0, lastMove: 0 });
+
+  // --- camera command hook + zoom readout for the toolbar buttons ----------
+  const cameraCmd = useRef<(cmd: CameraCmd) => void>(() => {});
+  const handleZoomReport = useCallback((pct: number) => setZoomPct(pct), []);
+
+  // --- smart guidance bookkeeping ("is the student stuck?") -----------------
+  const mountAtRef = useRef(performance.now());
+  const lastProgressRef = useRef(performance.now());
+  const wrongClicksRef = useRef<number[]>([]);
+  const cooldownUntilRef = useRef(0);
+  const nudgeTokenRef = useRef(0);
+  const nudgeActiveRef = useRef(false);
+  const nudgePlanRef = useRef<NudgePlan | null>(null);
+  const nudgeSnapRef = useRef({ volume: 0, swirlTurns: 0, trials: 0 });
+
+  /** Any meaningful interaction resets the "stuck" timers. */
+  const markProgress = useCallback(() => {
+    lastProgressRef.current = performance.now();
+    wrongClicksRef.current.length = 0;
+  }, []);
 
   const endpoint = volume >= 25.1;
   const overshot = volume >= 26;
@@ -560,10 +797,11 @@ export default function TitrationLab() {
     setVolume(next);
     setDrops((d) => d + 1);
     live.current.dropTick += 1;
+    markProgress();
     // The drop is heard a beat after it is released — when it lands.
     window.setTimeout(() => labSound.drip(next >= 20), 240);
     vibrate(8);
-  }, [stopHold]);
+  }, [stopHold, markProgress]);
 
   const startHold = useCallback(() => {
     if (holdRef.current !== null || volumeRef.current >= 30) return;
@@ -685,6 +923,7 @@ export default function TitrationLab() {
     if (turns > s.turns) {
       s.turns = turns;
       setSwirlTurns(turns);
+      markProgress();
       vibrate(6);
       labSound.glassClink(true);
     }
@@ -733,7 +972,10 @@ export default function TitrationLab() {
     setTab('observations');
   };
 
-  const onSceneInteract = useCallback(() => { setCameraMoved(true); }, []);
+  const onSceneInteract = useCallback(() => {
+    setCameraMoved(true);
+    markProgress();
+  }, [markProgress]);
 
   const toggleSound = () => {
     setSoundOn((on) => {
@@ -744,6 +986,135 @@ export default function TitrationLab() {
       return next;
     });
   };
+
+  // --- smart guidance: notice a stuck student, then demonstrate the action ---
+  const stateRef = useRef({
+    volume: 0,
+    mentorIndex: 0,
+    endpoint: false,
+    overshot: false,
+    trials: 0,
+    dispensing: false,
+    cameraMoved: false,
+    swirlTurns: 0,
+    tab: 'procedure' as 'procedure' | 'observations' | 'theory',
+  });
+  useEffect(() => {
+    stateRef.current = {
+      volume, mentorIndex, endpoint, overshot, trials: trials.length, dispensing,
+      cameraMoved, swirlTurns, tab,
+    };
+  });
+
+  const dismissNudge = useCallback((reason: 'manual' | 'timeout' | 'satisfied') => {
+    if (!nudgeActiveRef.current) return;
+    nudgeActiveRef.current = false;
+    nudgePlanRef.current = null;
+    setNudge(null);
+    // The cooldown stops the lab from nagging; how long depends on why it hid.
+    cooldownUntilRef.current = performance.now() + (reason === 'timeout' ? 45000 : reason === 'satisfied' ? 20000 : 32000);
+    lastProgressRef.current = performance.now();
+  }, []);
+
+  /** Resolve which DOM element the animated hand should point at right now. */
+  const getNudgeTarget = useCallback((): HTMLElement | null => {
+    const plan = nudgePlanRef.current;
+    if (!plan) return null;
+    if (plan.target === 'observations' || plan.target === 'record') {
+      if (stateRef.current.tab === 'observations') {
+        return document.querySelector<HTMLElement>('[data-nudge="record"]')
+          ?? document.querySelector<HTMLElement>('[data-nudge="observations"]');
+      }
+      return document.querySelector<HTMLElement>('[data-nudge="observations"]');
+    }
+    return document.querySelector<HTMLElement>(`[data-nudge="${plan.target}"]`);
+  }, []);
+
+  // Classify every press: productive, neutral, or a sign of confusion.
+  useEffect(() => {
+    const EFFECTIVE = [
+      '.dispense-button', '.swirl-pad', '.sound-button', '.sound-slider', '.zoom-button',
+      '.scene-toolbar select', '.speed-control input', '.notes-tabs button',
+      '.record-button', '.text-button', '.mentor-ack', '.report-card button',
+    ].join(',');
+    const onDocPointerDown = (e: PointerEvent) => {
+      const target = e.target as Element | null;
+      if (!target || typeof target.closest !== 'function') return;
+      if (target.closest('.nudge-layer')) return; // dismissing guidance is neutral
+      if (target.closest('.titration-canvas')) {
+        // A bare tap on the 3D scene never orbits the camera — it only counts
+        // as confusion when the mentor is waiting for something else.
+        const st = stateRef.current;
+        const waitingElsewhere = !(st.mentorIndex === 0 && !st.cameraMoved);
+        if (waitingElsewhere) wrongClicksRef.current.push(performance.now());
+        return;
+      }
+      const el = target.closest(EFFECTIVE);
+      if (!el) {
+        wrongClicksRef.current.push(performance.now());
+        return;
+      }
+      // Reset with nothing to reset is a no-op flail, not progress.
+      const resetNoop = el.classList.contains('text-button')
+        && stateRef.current.volume < 0.5 && stateRef.current.trials === 0;
+      if (resetNoop) wrongClicksRef.current.push(performance.now());
+      else markProgress();
+    };
+    document.addEventListener('pointerdown', onDocPointerDown, true);
+    return () => document.removeEventListener('pointerdown', onDocPointerDown, true);
+  }, [markProgress]);
+
+  // Watch for "stuck": several wrong presses, or a long stretch of nothing.
+  useEffect(() => {
+    const id = window.setInterval(() => {
+      if (document.visibilityState !== 'visible') return;
+      const now = performance.now();
+      if (nudgeActiveRef.current || now < cooldownUntilRef.current) return;
+      if (now - mountAtRef.current < 4000) return;
+      const st = stateRef.current;
+      if (st.dispensing) return; // actively working — leave them be
+      if (st.mentorIndex >= MENTOR_STEPS.length && !st.overshot) return; // finished
+      const wrongs = wrongClicksRef.current.filter((t) => now - t < 15000);
+      wrongClicksRef.current = wrongs;
+      const idle = now - lastProgressRef.current;
+      const confused = wrongs.length >= 3 || idle > 20000 || (idle > 12000 && wrongs.length >= 1);
+      if (!confused) return;
+      const plan = nudgePlan(st);
+      if (!plan) return;
+      nudgeTokenRef.current += 1;
+      nudgeActiveRef.current = true;
+      nudgePlanRef.current = plan;
+      nudgeSnapRef.current = { volume: st.volume, swirlTurns: st.swirlTurns, trials: st.trials };
+      setNudge({ plan, token: nudgeTokenRef.current });
+      labSound.step();
+      vibrate(10);
+    }, 1000);
+    return () => window.clearInterval(id);
+  }, []);
+
+  // The guidance dissolves the moment the student does the demonstrated thing.
+  useEffect(() => {
+    if (!nudge || !nudgeActiveRef.current) return;
+    const t = nudge.plan.target;
+    const snap = nudgeSnapRef.current;
+    const ok =
+      (t === 'scene' && cameraMoved) ||
+      (t === 'dispense' && (dispensing || volume > snap.volume)) ||
+      (t === 'swirl' && swirlTurns > snap.swirlTurns) ||
+      ((t === 'observations' || t === 'record') && trials.length > snap.trials) ||
+      (t === 'reset' && volume < snap.volume);
+    if (ok) {
+      labSound.tick();
+      dismissNudge('satisfied');
+    }
+  }, [nudge, cameraMoved, dispensing, volume, swirlTurns, trials, dismissNudge]);
+
+  // If they still do nothing, quietly step back after a while.
+  useEffect(() => {
+    if (!nudge) return;
+    const id = window.setTimeout(() => dismissNudge('timeout'), 16000);
+    return () => window.clearTimeout(id);
+  }, [nudge, dismissNudge]);
 
   const indicatorLabel = endpoint ? (overshot ? 'Deep pink' : 'Pink') : ph >= 8.2 ? 'Faint pink' : 'Colourless';
 
@@ -767,8 +1138,13 @@ export default function TitrationLab() {
       <section className="lab-workspace">
         <div className="scene-column">
           <div className="scene-toolbar">
-            <div><span className="live-dot" /> LIVE 3D SCENE <span className="toolbar-divider">/</span> DRAG TO LOOK AROUND</div>
+            <div><span className="live-dot" /> LIVE 3D SCENE <span className="toolbar-divider">/</span> <span className="toolbar-hint">DRAG TO ORBIT · SCROLL OR PINCH TO ZOOM</span></div>
             <div className="toolbar-right">
+              <div className="zoom-cluster" role="group" aria-label="Camera zoom" data-zoom={zoomPct}>
+                <button className="zoom-button" type="button" onClick={() => { cameraCmd.current('in'); labSound.tick(); }} title="Zoom in" aria-label={`Zoom in — camera at ${zoomPct}%`}>+</button>
+                <button className="zoom-button" type="button" onClick={() => { cameraCmd.current('out'); labSound.tick(); }} title="Zoom out" aria-label={`Zoom out — camera at ${zoomPct}%`}>−</button>
+                <button className="zoom-button" type="button" onClick={() => { cameraCmd.current('home'); labSound.tick(); }} title="Reset view" aria-label="Reset the camera view">⤢</button>
+              </div>
               <div className="sound-cluster" role="group" aria-label="Sound controls">
                 <button className={`sound-button${soundOn ? '' : ' muted'}`} type="button" onClick={toggleSound} aria-pressed={soundOn} title={soundOn ? 'Mute the lab' : 'Unmute the lab'}>
                   <span aria-hidden="true">{soundOn ? '🔊' : '🔇'}</span>
@@ -788,8 +1164,8 @@ export default function TitrationLab() {
             </div>
           </div>
 
-          <div className="scene-frame">
-            <TitrationScene live={live} quality={quality} onInteract={onSceneInteract} />
+          <div className="scene-frame" data-nudge="scene">
+            <TitrationScene live={live} quality={quality} onInteract={onSceneInteract} cameraCmd={cameraCmd} onZoom={handleZoomReport} />
             <div className="scene-chip"><span>●</span> Student-controlled experiment</div>
             <div className="scene-legend"><span><i className="legend-orange" /> Titrant</span><span><i className="legend-purple" /> Indicator solution</span><span><i className="legend-pink" /> Pink flash</span></div>
             <div className={`coach-bar tone-${coach.tone}`} aria-live="polite">
@@ -803,7 +1179,7 @@ export default function TitrationLab() {
           <div className="control-panel">
             <div className="panel-title">
               <div><span className="panel-kicker">YOUR HANDS, YOUR EXPERIMENT</span><h2>Operate the burette</h2></div>
-              <button className="text-button" onClick={() => { reset(); }}>Reset experiment ↺</button>
+              <button className="text-button" data-nudge="reset" onClick={() => { reset(); }}>Reset experiment ↺</button>
             </div>
             <div className="hands-grid">
               <div className="burette-control">
@@ -818,6 +1194,7 @@ export default function TitrationLab() {
                 </div>
                 <button
                   className={`dispense-button${dispensing ? ' holding' : ''}${volume >= 30 ? ' disabled' : ''}`}
+                  data-nudge="dispense"
                   disabled={volume >= 30}
                   aria-pressed={dispensing}
                   onPointerDown={(e) => { e.preventDefault(); startHold(); }}
@@ -837,6 +1214,7 @@ export default function TitrationLab() {
                 <div
                   ref={padRef}
                   className={`swirl-pad${padActive ? ' active' : ''}`}
+                  data-nudge="swirl"
                   role="application"
                   aria-label="Swirl pad — drag in circles to swirl the flask"
                   onPointerDown={onPadDown}
@@ -896,7 +1274,7 @@ export default function TitrationLab() {
 
           <section className="notes-card">
             <div className="notes-tabs" role="tablist" aria-label="Lab information">
-              <button className={tab === 'procedure' ? 'active' : ''} onClick={() => { setTab('procedure'); labSound.tick(); }}>Procedure</button><button className={tab === 'observations' ? 'active' : ''} onClick={() => { setTab('observations'); labSound.tick(); }}>Observations</button><button className={tab === 'theory' ? 'active' : ''} onClick={() => { setTab('theory'); labSound.tick(); }}>Theory</button>
+              <button className={tab === 'procedure' ? 'active' : ''} onClick={() => { setTab('procedure'); labSound.tick(); }}>Procedure</button><button className={tab === 'observations' ? 'active' : ''} data-nudge="observations" onClick={() => { setTab('observations'); labSound.tick(); }}>Observations</button><button className={tab === 'theory' ? 'active' : ''} onClick={() => { setTab('theory'); labSound.tick(); }}>Theory</button>
             </div>
             {tab === 'procedure' && (
               <div className="notes-content">
@@ -923,7 +1301,7 @@ export default function TitrationLab() {
                 <div className="observation-row"><span>Swirl turns</span><strong>{swirlTurns}</strong></div>
                 {endpoint ? (
                   <>
-                    <button className="record-button" type="button" onClick={recordTrial}>✎ Record this trial</button>
+                    <button className="record-button" type="button" data-nudge="record" onClick={recordTrial}>✎ Record this trial</button>
                     {trials.length > 0 && (
                       <table className="trial-table">
                         <thead><tr><th>#</th><th>Endpoint</th><th>pH</th><th>Drops</th><th>Time</th><th>±0.2 mL</th></tr></thead>
@@ -970,6 +1348,10 @@ export default function TitrationLab() {
         </aside>
       </section>
       <footer className="lab-footer"><span><strong>SOREN LABS</strong> · Built for learning by doing</span><span>Experiment 001 · Chemistry</span><a href="/">Back to all labs ↑</a></footer>
+
+      {nudge && (
+        <NudgeLayer key={nudge.token} plan={nudge.plan} getTarget={getNudgeTarget} onDismiss={() => dismissNudge('manual')} />
+      )}
 
       {toast && (
         <div className={`toast tone-${toast.tone}`} role="status" aria-live="assertive">

@@ -56,7 +56,9 @@ Open `/labs/titration` to explore the first interactive chemistry lab. It includ
 - **Pink flash chemistry** — near the equivalence point, each drop lands as a localized pink bloom that fades when you swirl. The first bloom that survives swirling is the endpoint, exactly like a real phenolphthalein titration.
 - **Lab mentor** — a seven-step guided procedure that completes itself as you work, a contextual coach that reacts to what you do (including overshoot warnings), and badges for skills like drop-by-drop control and repeatable accuracy.
 - **Live titration curve** — pH versus volume plotted in real time, with the equivalence line and the phenolphthalein transition band marked.
-- **Drag to look around** — orbit the 3D bench with a drag; the scene is still fully usable on touch devices.
+- **Drag to look around, zoom anywhere** — orbit the 3D bench with a drag; zoom with the mouse wheel, a two-finger pinch on touch screens, the +/−/reset toolbar buttons, or the +/−/0 keys on a focused canvas. Double-tap resets the view.
+- **Smart guidance nudges** — if you go idle or keep clicking the wrong spots, an animated hand appears over the exact control you should use next and *demonstrates* the gesture (press-and-hold, drop-by-drop taps, circular swirling, orbit dragging). It dissolves the moment you do the demonstrated action, and never nags thanks to per-reason cooldowns.
+- **Tuned for every screen** — dedicated layouts for desktop, tablet, portrait phones and landscape phones, 38px+ touch targets on phones, safe-area insets, and a render-resolution scale that adapts to measured FPS without ever changing the scene's on-screen size.
 
 ## Design and performance principles
 
