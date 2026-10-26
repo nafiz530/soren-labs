@@ -9,10 +9,12 @@ function TitrationScene({ volume, endpoint, running, quality }: { volume: number
   const appRef = useRef<pc.Application | null>(null);
   const volumeRef = useRef(volume);
   const endpointRef = useRef(endpoint);
+  const runningRef = useRef(running);
   const qualityRef = useRef(quality);
 
   useEffect(() => { volumeRef.current = volume; }, [volume]);
   useEffect(() => { endpointRef.current = endpoint; }, [endpoint]);
+  useEffect(() => { runningRef.current = running; }, [running]);
   useEffect(() => { qualityRef.current = quality; }, [quality]);
 
   useEffect(() => {
@@ -122,7 +124,7 @@ function TitrationScene({ volume, endpoint, running, quality }: { volume: number
       time += dt;
       // Animate a single falling drop only while the student is dispensing.
       const drop = app.root.findByName('Falling drop');
-      if (running && volumeRef.current > 0 && !endpointRef.current) {
+      if (runningRef.current && volumeRef.current > 0 && !endpointRef.current) {
         if (!drop) {
           const d = addShape('Falling drop', 'sphere', [-0.42, 0.43, -0.28], [0.045, 0.07, 0.045], liquidMat);
           d.enabled = true;
@@ -183,6 +185,7 @@ export default function TitrationLab() {
   const [running, setRunning] = useState(false);
   const [quality, setQuality] = useState<SceneQuality>('auto');
   const [elapsed, setElapsed] = useState(0);
+  const [realElapsed, setRealElapsed] = useState(0);
   const [drops, setDrops] = useState(0);
   const [showGuide, setShowGuide] = useState(true);
   const [tab, setTab] = useState<'procedure' | 'observations' | 'theory'>('procedure');
@@ -190,13 +193,15 @@ export default function TitrationLab() {
   const endpoint = volume >= 24.8;
   const ph = Math.min(12.8, 2.1 + volume * 0.37 + (volume > 23 ? Math.pow(volume - 23, 2) * 0.75 : 0));
   const phLabel = endpoint ? 'Endpoint reached' : volume > 18 ? 'Approaching endpoint' : 'Acidic solution';
-  const actualSeconds = elapsed / speed;
 
   useEffect(() => {
     if (!running) return;
-    timerRef.current = window.setInterval(() => setElapsed((v) => v + 1), 1000);
+    timerRef.current = window.setInterval(() => {
+      setRealElapsed((v) => v + 1);
+      setElapsed((v) => Math.min(600, v + speed));
+    }, 1000);
     return () => { if (timerRef.current !== null) window.clearInterval(timerRef.current); };
-  }, [running]);
+  }, [running, speed]);
 
   useEffect(() => {
     if (elapsed >= 600) setRunning(false);
@@ -214,6 +219,7 @@ export default function TitrationLab() {
     setSpeed(1);
     setRunning(false);
     setElapsed(0);
+    setRealElapsed(0);
     setDrops(0);
   };
 
@@ -265,7 +271,7 @@ export default function TitrationLab() {
             <div className="instrument-header"><div><span className="panel-kicker">LIVE INSTRUMENT</span><h2>Experiment readings</h2></div><span className="instrument-live">LIVE</span></div>
             <div className="reading-main"><span>Volume delivered</span><strong>{volume.toFixed(2)} <small>mL</small></strong><div className="reading-track"><span style={{ width: `${Math.min(100, volume / 30 * 100)}%` }} /></div><div className="reading-scale"><span>0 mL</span><span>30 mL</span></div></div>
             <div className="reading-grid"><div><span>Estimated pH</span><strong>{ph.toFixed(2)}</strong></div><div><span>Indicator</span><strong className={endpoint ? 'pink-value' : ''}>{endpoint ? 'Pink' : volume > 18 ? 'Faint pink' : 'Colourless'}</strong></div><div><span>Elapsed time</span><strong>{Math.floor(elapsed / 60).toString().padStart(2, '0')}:{(elapsed % 60).toString().padStart(2, '0')}</strong></div><div><span>Playback speed</span><strong>{speed}×</strong></div></div>
-            <div className="speed-control"><div className="speed-label"><span>Simulation playback</span><strong>{speed}×</strong></div><input aria-label="Simulation speed" type="range" min="1" max="10" step="1" value={speed} onChange={(e) => setSpeed(Number(e.target.value))} /><div className="speed-marks"><span>Real time</span><span>10× faster</span></div><p>Experiment clock: {Math.round(elapsed * speed)} simulated seconds · {elapsed} real seconds elapsed</p></div>
+            <div className="speed-control"><div className="speed-label"><span>Simulation playback</span><strong>{speed}×</strong></div><input aria-label="Simulation speed" type="range" min="1" max="10" step="1" value={speed} onChange={(e) => setSpeed(Number(e.target.value))} /><div className="speed-marks"><span>Real time</span><span>10× faster</span></div><p>Experiment clock: {elapsed} simulated seconds · {realElapsed} real seconds elapsed</p></div>
           </section>
 
           <section className="notes-card">
