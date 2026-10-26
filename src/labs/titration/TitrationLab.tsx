@@ -91,7 +91,7 @@ function TitrationScene({ volume, endpoint, running, quality }: { volume: number
     addShape('Stand rod', 'cylinder', [-1.45, 1.55, -0.28], [0.055, 3.0, 0.055], steelMat);
     addShape('Clamp arm', 'box', [-0.96, 2.52, -0.28], [1.05, 0.09, 0.12], darkMat);
     addShape('Burette glass', 'cylinder', [-0.42, 1.74, -0.28], [0.14, 1.9, 0.14], glassMat);
-    addShape('Burette solution', 'cylinder', [-0.42, 1.78, -0.28], [0.088, Math.max(0.18, 1.58 - volume / 100 * 1.2), 0.088], liquidMat);
+    const buretteSolution = addShape('Burette solution', 'cylinder', [-0.42, 1.78, -0.28], [0.088, 1.58, 0.088], liquidMat);
     for (let i = 0; i <= 10; i++) {
       addShape('Burette graduation ' + i, 'box', [-0.32, 2.48 - i * 0.145, -0.195], [i % 5 === 0 ? 0.11 : 0.06, 0.012, 0.012], darkMat);
     }
@@ -104,7 +104,7 @@ function TitrationScene({ volume, endpoint, running, quality }: { volume: number
     addShape('Flask body', 'cone', [0.45, 0.67, 0.18], [1.08, 1.12, 0.9], glassMat, [0, 0, 0]);
     addShape('Flask neck', 'cylinder', [0.45, 1.38, 0.18], [0.27, 0.48, 0.27], glassMat);
     addShape('Flask rim', 'cylinder', [0.45, 1.63, 0.18], [0.34, 0.07, 0.34], glassMat);
-    addShape('Flask solution', 'cylinder', [0.45, 0.42, 0.18], [0.70, 0.12, 0.58], flaskLiquidMat);
+    const flaskSolution = addShape('Flask solution', 'cylinder', [0.45, 0.42, 0.18], [0.70, 0.12, 0.58], flaskLiquidMat);
     addShape('Flask foot', 'cylinder', [0.45, 0.055, 0.18], [1.0, 0.08, 0.82], glassMat);
 
     // Small dropper and nearby reagent bottle.
@@ -122,6 +122,13 @@ function TitrationScene({ volume, endpoint, running, quality }: { volume: number
     let time = 0;
     const onUpdate = (dt: number) => {
       time += dt;
+      const delivered = volumeRef.current;
+      const remaining = Math.max(0.18, 1.58 - delivered / 30 * 1.35);
+      buretteSolution.setLocalScale(0.088, remaining, 0.088);
+      buretteSolution.setPosition(-0.42, 2.52 - remaining / 2, -0.28);
+      flaskLiquidMat.diffuse = endpointRef.current ? new pc.Color(0.89, 0.34, 0.65) : new pc.Color(0.92, 0.78, 0.93);
+      flaskLiquidMat.update();
+      flaskSolution.setPosition(0.45, 0.42, 0.18);
       // Animate a single falling drop only while the student is dispensing.
       const drop = app.root.findByName('Falling drop');
       if (runningRef.current && volumeRef.current > 0 && !endpointRef.current) {
@@ -190,9 +197,13 @@ export default function TitrationLab() {
   const [showGuide, setShowGuide] = useState(true);
   const [tab, setTab] = useState<'procedure' | 'observations' | 'theory'>('procedure');
   const timerRef = useRef<number | null>(null);
-  const endpoint = volume >= 24.8;
-  const ph = Math.min(12.8, 2.1 + volume * 0.37 + (volume > 23 ? Math.pow(volume - 23, 2) * 0.75 : 0));
-  const phLabel = endpoint ? 'Endpoint reached' : volume > 18 ? 'Approaching endpoint' : 'Acidic solution';
+  const endpoint = volume >= 25.1;
+  // Strong-acid/strong-base model: 25 mL of 0.1 M HCl titrated with 0.1 M NaOH.
+  const ph = volume < 25
+    ? -Math.log10(0.1 * (25 - volume) / (25 + volume))
+    : volume === 25
+      ? 7
+      : 14 + Math.log10(0.1 * (volume - 25) / (25 + volume));
 
   useEffect(() => {
     if (!running) return;
@@ -260,8 +271,8 @@ export default function TitrationLab() {
             <div className="panel-title"><div><span className="panel-kicker">YOUR HANDS, YOUR EXPERIMENT</span><h2>Operate the burette</h2></div><button className="text-button" onClick={reset}>Reset experiment ↺</button></div>
             <div className="burette-control">
               <div className="valve-illustration" aria-hidden="true"><div className="valve-track"><div className="valve-fill" style={{ height: `${Math.min(100, volume / 30 * 100)}%` }} /></div><div className="valve-handle" /></div>
-              <div className="burette-instructions"><strong>Stopcock control</strong><p>Press and hold to add titrant. Near the endpoint, dispense smaller drops for more accurate results.</p><div className="drop-row"><span>{drops} drops added</span><span>{volume.toFixed(2)} mL delivered</span></div></div>
-              <button className={endpoint ? 'dispense-button disabled' : 'dispense-button'} disabled={endpoint} onPointerDown={(e) => { e.preventDefault(); addDrop(); }} onClick={() => { if (!endpoint) addDrop(); }}><span className="dispense-icon">＋</span><span>{endpoint ? 'Endpoint reached' : 'Add titrant'}</span><small>{volume >= 20 ? '0.1 mL per drop' : '0.5 mL per drop'}</small></button>
+              <div className="burette-instructions"><strong>Stopcock control</strong><p>Tap to add titrant. Near the endpoint, dispense smaller drops for more accurate results.</p><div className="drop-row"><span>{drops} drops added</span><span>{volume.toFixed(2)} mL delivered</span></div></div>
+              <button className={endpoint ? 'dispense-button disabled' : 'dispense-button'} disabled={endpoint} onPointerDown={(e) => { e.preventDefault(); addDrop(); }}><span className="dispense-icon">＋</span><span>{endpoint ? 'Endpoint reached' : 'Add titrant'}</span><small>{volume >= 20 ? '0.1 mL per drop' : '0.5 mL per drop'}</small></button>
             </div>
           </div>
         </div>
@@ -270,7 +281,7 @@ export default function TitrationLab() {
           <section className="instrument-card">
             <div className="instrument-header"><div><span className="panel-kicker">LIVE INSTRUMENT</span><h2>Experiment readings</h2></div><span className="instrument-live">LIVE</span></div>
             <div className="reading-main"><span>Volume delivered</span><strong>{volume.toFixed(2)} <small>mL</small></strong><div className="reading-track"><span style={{ width: `${Math.min(100, volume / 30 * 100)}%` }} /></div><div className="reading-scale"><span>0 mL</span><span>30 mL</span></div></div>
-            <div className="reading-grid"><div><span>Estimated pH</span><strong>{ph.toFixed(2)}</strong></div><div><span>Indicator</span><strong className={endpoint ? 'pink-value' : ''}>{endpoint ? 'Pink' : volume > 18 ? 'Faint pink' : 'Colourless'}</strong></div><div><span>Elapsed time</span><strong>{Math.floor(elapsed / 60).toString().padStart(2, '0')}:{(elapsed % 60).toString().padStart(2, '0')}</strong></div><div><span>Playback speed</span><strong>{speed}×</strong></div></div>
+            <div className="reading-grid"><div><span>Estimated pH</span><strong>{ph.toFixed(2)}</strong></div><div><span>Indicator</span><strong className={endpoint ? 'pink-value' : ''}>{endpoint ? 'Pink' : ph >= 8.2 ? 'Faint pink' : 'Colourless'}</strong></div><div><span>Elapsed time</span><strong>{Math.floor(elapsed / 60).toString().padStart(2, '0')}:{(elapsed % 60).toString().padStart(2, '0')}</strong></div><div><span>Playback speed</span><strong>{speed}×</strong></div></div>
             <div className="speed-control"><div className="speed-label"><span>Simulation playback</span><strong>{speed}×</strong></div><input aria-label="Simulation speed" type="range" min="1" max="10" step="1" value={speed} onChange={(e) => setSpeed(Number(e.target.value))} /><div className="speed-marks"><span>Real time</span><span>10× faster</span></div><p>Experiment clock: {elapsed} simulated seconds · {realElapsed} real seconds elapsed</p></div>
           </section>
 
@@ -280,7 +291,7 @@ export default function TitrationLab() {
             </div>
             {tab === 'procedure' && <div className="notes-content"><h3>What to do</h3><ol><li>Check the initial burette and flask setup.</li><li>Add titrant gradually using the control.</li><li>Watch the indicator and volume reading.</li><li>Stop when a faint pink endpoint persists.</li></ol>{showGuide && <div className="hint-box"><span>✦</span><p><strong>Lab tip</strong>Near the endpoint, add titrant in smaller amounts. In a real titration, the endpoint is judged by a persistent colour change.</p></div>}<button className="guide-toggle" onClick={() => setShowGuide((v) => !v)}>{showGuide ? 'Hide lab tip' : 'Show lab tip'}</button></div>}
             {tab === 'observations' && <div className="notes-content"><h3>Your observation log</h3><div className="observation-row"><span>Volume added</span><strong>{volume.toFixed(2)} mL</strong></div><div className="observation-row"><span>Observed colour</span><strong>{endpoint ? 'Pink' : volume > 18 ? 'Faint pink' : 'Colourless'}</strong></div><div className="observation-row"><span>Drop count</span><strong>{drops}</strong></div><p className="observation-note">Record the endpoint volume and compare repeated trials for accuracy.</p></div>}
-            {tab === 'theory' && <div className="notes-content"><h3>Why it works</h3><p>Titration determines an unknown concentration by reacting a measured volume of one solution with a solution of known concentration.</p><div className="equation">HCl + NaOH → NaCl + H₂O</div><p>For a 1:1 acid–base reaction, the equivalence point occurs when the reacting amounts are stoichiometrically equal. The indicator endpoint is an experimental estimate of that point.</p></div>}
+            {tab === 'theory' && <div className="notes-content"><h3>Why it works</h3><p>Titration determines an unknown concentration by reacting a measured volume of one solution with a solution of known concentration.</p><div className="equation">HCl + NaOH → NaCl + H₂O</div><p>For a 1:1 acid–base reaction, the equivalence point occurs when the reacting amounts are stoichiometrically equal. The equivalence point is near 25.00 mL for these equal-concentration solutions. The visible phenolphthalein endpoint appears just after equivalence, when the solution becomes faint pink.</p></div>}
           </section>
 
           <section className="report-card"><div className="report-icon">↗</div><div><strong>Experiment report</strong><p>{endpoint ? 'Endpoint recorded. Review your readings and write a conclusion.' : 'Reach the endpoint to complete your observation.'}</p></div><button onClick={() => setTab('observations')} aria-label="Open observations">→</button></section>
