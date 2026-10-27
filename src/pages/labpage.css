@@ -1,0 +1,14 @@
+.coming-page{min-height:100vh;background:#f6f8fb;color:#172334;font-family:'DM Sans',sans-serif}
+.coming-hero{max-width:860px;margin:auto;padding:56px clamp(16px,4vw,54px) 40px}
+.coming-hero h1{font-family:Manrope,sans-serif;font-size:clamp(30px,4vw,44px);letter-spacing:-1.8px;line-height:1.14;margin:14px 0 12px}
+.coming-hero>p:first-of-type{font-size:15px;line-height:1.8;color:#4d5a6b;margin:0 0 10px;max-width:640px}
+.coming-status{font-size:12px;line-height:1.7;color:#8b97a5;margin:0 0 22px;max-width:640px}
+.coming-live{max-width:1150px;margin:auto;padding:0 clamp(16px,4vw,54px) 60px}
+.coming-live h2{font-family:Manrope,sans-serif;font-size:20px;letter-spacing:-.7px;margin:0 0 14px}
+.coming-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.coming-card{display:flex;flex-direction:column;gap:5px;padding:17px;border:1px solid #e5eaf0;border-radius:12px;background:#fff;text-decoration:none}
+.coming-card:hover{border-color:#f9c9a3}
+.coming-card .kicker{font-size:8.5px;font-weight:800;letter-spacing:1px;color:#b07a4a}
+.coming-card strong{font-family:Manrope,sans-serif;font-size:16px;letter-spacing:-.4px;color:#172334}
+.coming-card p{margin:0;font-size:11px;line-height:1.6;color:#7a8795}
+.coming-card .open{margin-top:8px;font-size:10px;font-weight:800;color:#e8632a}

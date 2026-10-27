@@ -1,0 +1,25 @@
+/* Resonance-tube lab specific styles (everything shared lives in engine.css). */
+
+.rt-layout{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:16px;align-items:stretch;margin-top:2px}
+.fork-row{display:flex;flex-direction:column;gap:7px;padding:12px 14px;border:1px solid var(--lab-line);border-radius:10px;background:#f7f9fb}
+.fork-row>span{font-size:8.5px;font-weight:800;letter-spacing:1.2px;color:#8b97a5}
+.fork-options{display:flex;gap:8px}
+.fork-options button{flex:1;padding:12px 8px;border:1px solid #d9e0e8;border-radius:9px;background:#fff;font-family:Manrope,sans-serif;font-size:14px;font-weight:800;color:#536276;transition:border-color .15s,background .15s,color .15s,box-shadow .15s}
+.fork-options button:hover{border-color:#f0c9a8}
+.fork-options button.selected{border-color:#f97316;background:#fff8f2;color:#b3431f;box-shadow:inset 0 0 0 1px #f97316}
+.fork-row small{font-size:9px;line-height:1.5;color:#8b97a5}
+.rt-marks{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
+.mark-button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:58px;padding:12px 16px;border:1px solid #f0c9a8;border-radius:12px;background:linear-gradient(180deg,#fff,#fdf6ec);color:#b3431f;font-size:12px;font-weight:800;transition:border-color .15s,box-shadow .15s,transform .1s}
+.mark-button:hover{border-color:var(--lab-accent);box-shadow:0 6px 16px #f973161d}
+.mark-button:active{transform:scale(.97)}
+.mark-button:disabled{opacity:.55;cursor:not-allowed;transform:none;box-shadow:none}
+.mark-button small{font-size:9px;font-weight:600;color:#c98a63;letter-spacing:0}
+.mark-button.boil{border-color:#bcd3e2;background:linear-gradient(180deg,#fff,#eef5fa);color:#2b5d82}
+.mark-button.boil small{color:#6d94ad}
+.v-readout{margin-top:14px;padding:14px;border-radius:9px;background:#f7f9fb;border:1px solid var(--lab-line)}
+.v-readout>span{font-size:10px;color:#7c8998}
+.v-readout>strong{display:block;margin-top:4px;font-family:Manrope,sans-serif;font-size:27px;font-weight:800;letter-spacing:-1px}
+.v-readout>strong small{font-size:11px;color:#8793a1;letter-spacing:0;font-weight:600}
+.v-readout>p{margin:8px 0 0;font-size:9px;color:#8b97a5;line-height:1.6}
+@media(max-width:980px){.rt-layout{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:740px){.rt-marks{grid-template-columns:1fr}.fork-options button{padding:13px 6px;font-size:13px}}

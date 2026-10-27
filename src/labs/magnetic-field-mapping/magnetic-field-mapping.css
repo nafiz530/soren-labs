@@ -1,0 +1,24 @@
+/* Magnetic-field-mapping-lab-specific styles (everything shared lives in engine.css). */
+
+.mag-control-row{display:flex;flex-wrap:wrap;gap:10px;align-items:stretch}
+.mag-add{flex:1 1 210px;min-width:180px}
+.toggle-pill{
+  display:inline-flex;align-items:center;gap:9px;
+  min-height:46px;padding:10px 15px;
+  border:1px solid #d9e0e8;border-radius:11px;background:#fff;
+  font-size:11.5px;font-weight:700;color:#5b6a7d;
+  transition:border-color .15s,background .15s,color .15s,box-shadow .15s;
+}
+.toggle-pill:hover{border-color:#f0c9a8;box-shadow:0 4px 12px #f9731614}
+.toggle-pill:disabled{opacity:.5;cursor:not-allowed;box-shadow:none}
+.toggle-pill .dot{width:10px;height:10px;border-radius:50%;background:#c3ccd6;flex:none;transition:background .15s,box-shadow .15s}
+.toggle-pill.on{border-color:#f0c9a8;background:linear-gradient(180deg,#fff8f2,#fdeedd);color:#b3431f}
+.toggle-pill.on .dot{background:#f97316;box-shadow:0 0 0 3px #f9731633}
+.mag-tools{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.mag-tools .text-button{border:1px solid #e4e9ef;border-radius:9px}
+.mag-tools .text-button:disabled{opacity:.45}
+@media(max-width:740px){
+  .mag-control-row{gap:8px}
+  .toggle-pill{flex:1 1 45%;min-height:44px;justify-content:center;font-size:10.5px;padding:10px 10px}
+  .mag-add{flex:1 1 100%}
+}

@@ -1,74 +1,69 @@
 # Soren Labs
 
-**Interactive science laboratories for every student.**
+Interactive virtual science laboratories — built for learning by doing. Students hold real instruments in the browser: stopcocks, pendulums, springs, circuits and optics benches, with a lab mentor that watches their hands and steps in when they stall.
 
-Soren Labs is a mobile-first virtual laboratory project focused on making science practical, visual, and accessible to students — including those using low-end Android devices.
+**Live catalog:** 14 experiments (Chemistry 1 + Physics 13) out of 51 planned, each with a keyword-rich guide page for search at `/docs/{lab-name}`.
 
-## Project status
+## Stack
 
-The shared web foundation is in place, and the first benchmark experiment — an interactive acid–base titration lab — is available at `/labs/titration`.
+- React 19 + TypeScript + Vite (no router library — path-based rendering)
+- PlayCanvas for the 3D titration scene; hand-drawn Canvas2D for the physics benches
+- Web Audio synthesis for every sound (zero audio assets)
+- Plain CSS, mobile-first responsive (phone / tablet / desktop)
 
-## Technology
+## Architecture
 
-- **React + TypeScript** for the application interface
-- **Vite** for development and production builds
-- **PlayCanvas Engine** for future interactive 3D laboratory scenes
-- **Cloudflare Pages** for static hosting
+```
+src/
+  engine/           The Soren Lab Engine — shared by every lab
+    LabShell.tsx      page skeleton: toolbar → scene → caption → coach strip,
+                      control panel, mentor/readings/notes/badges sidebar
+    useLabLoop.ts     DPR-aware canvas sizing + rAF loop (stale-closure safe)
+    nudge.tsx         smart guidance: idle/wrong-click detection → pulsing
+                      ring + demonstrating hand + bubble over the real control
+    audio.ts          LabSound: synthesized ticks, clicks, pings, drips, loops
+    Plot.tsx          live scatter + least-squares fit for analysis graphs
+    math.ts           linearFit, clamp, fmtClock helpers
+    seo.ts            per-page <head> management (title/meta/OG/JSON-LD)
+    catalog.ts        all 51 labs: slug, docsSlug, subject, tier, SEO strings
+    ENGINE.md         the build contract for adding a new lab
+  labs/{slug}/       one folder per experiment:
+                      {Name}Lab.tsx + {slug}.css + docs.ts (SEO guide content)
+  docs/              DocsPage renderer + registry (/docs/{docsSlug} routes)
+  pages/             catalog homepage + "in development" pages
+scripts/
+  gen-sitemap.mjs    regenerates public/sitemap.xml + robots.txt from catalog
+```
 
-## Local development
+### Adding a lab
 
-Requirements: Node.js 20.19+ or 22.12+.
+1. Add its entry to `src/engine/catalog.ts` (slug, docsSlug, subject, tier, tagline, SEO).
+2. Create `src/labs/{slug}/` with the component, CSS and `docs.ts` following `ENGINE.md` — copy the pendulum lab as a starting point.
+3. Register the lazy component in `src/App.tsx` (`LAB_COMPONENTS`) and the docs export in `src/docs/registry.ts`.
+4. Run `node scripts/gen-sitemap.mjs` and set `SITE_ORIGIN` in it to the production domain.
+
+Every lab inherits sound, mentor, nudge guidance, responsive layout and SEO automatically from the engine.
+
+## Features
+
+- Hands-on controls: hold-to-dispense stopcocks, draggable bobs/wipers/screens/magnets
+- Lab mentor with self-completing guided steps and contextual coaching
+- Smart guidance: if the student clicks wrongly or goes idle, an animated hand demonstrates the exact next gesture on the exact control
+- Real measurements: data tables, live plots, least-squares analysis, badges
+- Zoom (wheel/pinch/buttons) and orbit camera on the 3D titration scene
+- Synthesized sound with mute + volume, haptics on mobile
+- Per-lab SEO guide pages, JSON-LD, Open Graph, sitemap and robots.txt
+- Works on phone, tablet and desktop (safe-area aware, touch-first)
+
+## Run locally
 
 ```bash
 npm install
-npm run dev
+npm run dev        # develop
+npm run build      # type-check + production build
+npm run preview    # serve the build
 ```
 
-Create a production build:
+## Notes
 
-```bash
-npm run build
-npm run preview
-```
-
-## Cloudflare Pages
-
-Connect this repository to Cloudflare Pages and use:
-
-| Setting | Value |
-| --- | --- |
-| Framework preset | React (Vite) |
-| Build command | `npm run build` |
-| Build output directory | `dist` |
-| Root directory | `/` |
-
-The project is a static Vite application and does not require a server-side runtime to serve the initial page.
-
-## First experiment
-
-Open `/labs/titration` to explore the first interactive chemistry lab. It includes a PlayCanvas 3D scene, a hold-to-operate stopcock, a swirl pad for mixing, live synthesized sound, a guided mentor with a step-by-step procedure, a live pH titration curve, an observation log with repeatable trials, achievement badges, reset controls, and adaptive rendering-resolution settings. The chemistry readings use a documented idealized strong-acid/strong-base teaching model; the 3D liquid appearance is illustrative.
-
-### Hands-on features
-
-- **Press and hold the stopcock** — titrant flows only while you keep the valve open, just like the real thing. Release to stop instantly.
-- **Swirl pad** — drag in circles to rotate the flask; the liquid wobbles in 3D, sloshes audibly, and pink indicator flashes mix away as you swirl.
-- **Realistic sound, synthesized live** — drips, stopcock clicks, sloshing, glass resonances, a stream while pouring and a quiet room tone, all generated with the Web Audio API (zero audio assets, works offline). Mute and volume controls are in the scene toolbar; haptic feedback works on supporting phones.
-- **Pink flash chemistry** — near the equivalence point, each drop lands as a localized pink bloom that fades when you swirl. The first bloom that survives swirling is the endpoint, exactly like a real phenolphthalein titration.
-- **Lab mentor** — a seven-step guided procedure that completes itself as you work, a contextual coach that reacts to what you do (including overshoot warnings), and badges for skills like drop-by-drop control and repeatable accuracy.
-- **Live titration curve** — pH versus volume plotted in real time, with the equivalence line and the phenolphthalein transition band marked.
-- **Drag to look around, zoom anywhere** — orbit the 3D bench with a drag; zoom with the mouse wheel, a two-finger pinch on touch screens, the +/−/reset toolbar buttons, or the +/−/0 keys on a focused canvas. Double-tap resets the view.
-- **Smart guidance nudges** — if you go idle or keep clicking the wrong spots, an animated hand appears over the exact control you should use next and *demonstrates* the gesture (press-and-hold, drop-by-drop taps, circular swirling, orbit dragging). It dissolves the moment you do the demonstrated action, and never nags thanks to per-reason cooldowns.
-- **Tuned for every screen** — dedicated layouts for desktop, tablet, portrait phones and landscape phones, 38px+ touch targets on phones, safe-area insets, and a render-resolution scale that adapts to measured FPS without ever changing the scene's on-screen size.
-
-## Design and performance principles
-
-- Mobile-first and responsive by default
-- Prefer realistic visual quality without excluding low-end devices
-- Adapt rendering cost to measured device performance
-- Keep experiment logic scientifically grounded
-- Respect reduced-motion preferences where relevant
-- Avoid adding experiment projects until the shared foundation is ready
-
-## License
-
-License to be decided by the repository owner.
+The 3D titration scene is an interactive visual prototype; its pH/endpoint values are an illustrative teaching model. The 2D physics labs are numerically honest simulations — students measure real values off them (e.g. g from the pendulum, k from the spring, n from the glass slab).

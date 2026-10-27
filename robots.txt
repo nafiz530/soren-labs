@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Soren Labs — every lab and guide is free content
+Sitemap: https://sorenlabs.app/sitemap.xml

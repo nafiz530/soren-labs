@@ -1,0 +1,46 @@
+/* Catalog home additions — extends the base site styles in index.css. */
+
+.catalog-section{max-width:1332px;margin:auto;padding:0 clamp(16px,4vw,54px) 30px}
+.filter-row{display:flex;gap:8px;flex-wrap:wrap;margin:22px 0 20px}
+.filter-chip{display:inline-flex;align-items:center;gap:7px;padding:9px 15px;border:1px solid #e5eaf0;border-radius:999px;background:#fff;color:#5d6a79;font-size:11px;font-weight:700;cursor:pointer;transition:border-color .15s,color .15s;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.filter-chip span{font-size:9px;font-weight:800;color:#9aa4b1;background:#f2f5f8;padding:2px 7px;border-radius:999px}
+.filter-chip:hover{border-color:#f9c9a3;color:#e8632a}
+.filter-chip.active{border-color:#f97316;background:#fff7ed;color:#c2581d}
+.filter-chip.active span{background:#ffead5;color:#c2581d}
+.catalog-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.lab-card{display:flex;flex-direction:column;gap:8px;padding:22px;border:1px solid #e5eaf0;border-radius:16px;background:#fff;position:relative;overflow:hidden}
+.lab-card::after{content:"";position:absolute;inset:0 0 auto 0;height:3px;background:linear-gradient(90deg,#f9a46a,#f97316);opacity:0;transition:opacity .2s}
+.lab-card:hover{border-color:#f9c9a3}
+.lab-card:hover::after{opacity:1}
+.lab-card-top{display:flex;justify-content:space-between;align-items:center}
+.lab-card-subject{font-size:8.5px;font-weight:800;letter-spacing:1px;color:#8b97a5}
+.lab-card-tier{font-size:8px;font-weight:800;letter-spacing:.8px;padding:4px 8px;border-radius:999px}
+.lab-card-tier.tier-explorer{background:#e8f4fd;color:#1d6fa3}
+.lab-card-tier.tier-builder{background:#e9f8ef;color:#178247}
+.lab-card-tier.tier-master{background:#fff3e8;color:#c2581d}
+.lab-card h3{font-family:Manrope,sans-serif;font-size:19px;letter-spacing:-.6px;margin:0}
+.lab-card p{margin:0;font-size:11.5px;line-height:1.65;color:#7a8795;flex:1}
+.lab-card-actions{display:flex;align-items:center;gap:12px;margin-top:8px}
+.lab-card-actions .primary-button{font-size:10px;padding:10px 14px}
+.lab-card-guide{font-size:10px;font-weight:700;color:#7a8795;text-decoration:none}
+.lab-card-guide:hover{color:#e8632a}
+.roadmap{margin-top:44px;border:1px solid #e5eaf0;border-radius:16px;background:#fff;padding:26px clamp(16px,3vw,34px)}
+.roadmap-heading{display:flex;justify-content:space-between;align-items:baseline;gap:18px;flex-wrap:wrap;margin-bottom:18px}
+.roadmap-heading strong{font-family:Manrope,sans-serif;font-size:18px;letter-spacing:-.5px}
+.roadmap-heading p{margin:0;font-size:11.5px;line-height:1.65;color:#8b97a5;max-width:520px}
+.roadmap-group{padding-top:14px;border-top:1px solid #eef1f4}
+.roadmap-group h3{font-family:Manrope,sans-serif;font-size:13px;margin:0 0 6px;display:flex;align-items:center;gap:8px}
+.roadmap-group h3 span{font-size:9.5px;color:#9aa4b1;font-weight:600}
+.roadmap-group ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:6px 18px}
+.roadmap-group li{display:flex;align-items:baseline;gap:8px;padding:7px 0;font-size:11px;border-bottom:1px dashed #eef1f4}
+.roadmap-group li strong{color:#334256;font-weight:700}
+.roadmap-group li span{color:#93a0ad;line-height:1.5;flex:1}
+.roadmap-pill{flex:none;font-size:8px;font-weight:800;letter-spacing:.5px;color:#b07a4a;background:#fff3e8;padding:3px 7px;border-radius:999px;font-style:normal}
+@media(max-width:740px){
+  .filter-row{gap:6px}
+  .filter-chip{padding:8px 12px;font-size:10px}
+  .lab-card{padding:18px}
+  .lab-card h3{font-size:17px}
+  .roadmap{padding:18px 16px}
+  .roadmap-heading{flex-direction:column;gap:8px}
+}

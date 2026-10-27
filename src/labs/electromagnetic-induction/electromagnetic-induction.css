@@ -1,0 +1,18 @@
+/* Electromagnetic-induction-lab-specific styles (everything shared lives in engine.css). */
+
+.ind-control-row{display:flex;flex-wrap:wrap;gap:12px;align-items:stretch}
+.ind-flip{flex:1 1 240px;min-width:200px}
+.ind-selects{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.ind-selects label{display:flex;flex-direction:column;gap:6px;min-width:132px;font-size:10.5px;font-weight:700;color:#5b6a7d}
+.ind-selects select{
+  padding:10px 10px;border:1px solid #d9e0e8;border-radius:10px;
+  background:#fff;font:inherit;font-size:11.5px;font-weight:700;color:#172334;
+  min-height:44px;
+  transition:border-color .15s;
+}
+.ind-selects select:hover{border-color:#f0c9a8}
+@media(max-width:740px){
+  .ind-control-row{gap:10px}
+  .ind-selects{flex:1 1 100%}
+  .ind-selects label{flex:1}
+}
