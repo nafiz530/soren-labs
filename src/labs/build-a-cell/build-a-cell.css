@@ -1,0 +1,139 @@
+/* Build-a-cell lab-specific styles (everything shared lives in engine.css). */
+
+/* the scene wrapper fills the engine's .scene-frame and hosts the canvas
+   plus the non-interactive label chips overlay */
+.cbc-scene{position:absolute;inset:0}
+.cbc-chips{position:absolute;inset:0;pointer-events:none;z-index:3;overflow:hidden}
+.cbc-chip{
+  position:absolute;left:0;top:0;display:inline-flex;align-items:center;gap:6px;
+  padding:5px 11px;border:1px solid #d9e0e8;border-radius:20px;background:#fff;
+  box-shadow:0 3px 10px #1723341f;font-size:10px;font-weight:700;color:#4a5769;
+  white-space:nowrap;
+}
+.cbc-chip i{width:8px;height:8px;border-radius:50%;border:1px solid rgba(23,35,52,.22)}
+.cbc-ghost{
+  position:fixed;z-index:80;display:none;padding:7px 13px;border-radius:20px;
+  border:1px solid #f0c9a8;background:#fff8f2;color:#b3431f;
+  font-size:11px;font-weight:800;box-shadow:0 10px 24px #17233433;
+  pointer-events:none;transform:translate(-50%,-130%);white-space:nowrap;
+}
+
+/* cell selector chips + phase tracker in the control panel */
+.cbc-selector{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.cbc-selector-label{font-size:9px;font-weight:800;letter-spacing:1.4px;color:var(--lab-muted)}
+.cbc-chip-btn{
+  display:inline-flex;align-items:center;gap:7px;min-height:38px;padding:8px 14px;
+  border:1px solid #d9e0e8;border-radius:10px;background:#fff;
+  font-size:11.5px;font-weight:700;color:#4a5769;
+  transition:border-color .15s,background .15s,box-shadow .15s;
+}
+.cbc-chip-btn i{width:12px;height:12px;border-radius:4px;border:1px solid rgba(23,35,52,.25)}
+.cbc-chip-btn:hover{border-color:#ffc79f;background:#fff8f2}
+.cbc-chip-btn.active{
+  border-color:var(--lab-accent);background:#fff4ea;color:#b3431f;
+  box-shadow:0 4px 12px #f973161f;
+}
+.cbc-phase-row{display:flex;gap:6px;margin-top:12px;flex-wrap:wrap}
+.cbc-phase{
+  padding:5px 10px;border-radius:16px;border:1px dashed #d9e0e8;
+  font-size:9.5px;font-weight:700;color:#9aa4b1;letter-spacing:.4px;
+}
+.cbc-phase.on{border-style:solid;border-color:#f0c9a8;background:#fff8f2;color:#b3431f}
+.cbc-actions{margin-top:12px}
+
+/* completeness part list inside the bench instrument card */
+.cbc-parts{margin-top:12px;display:flex;flex-direction:column;gap:4px}
+.cbc-part-row{
+  display:flex;align-items:center;gap:8px;padding:6px 9px;
+  border:1px solid var(--lab-line);border-radius:8px;background:#fff;
+  font-size:10.5px;font-weight:600;color:#5b6a7d;opacity:.72;
+}
+.cbc-part-row i{width:9px;height:9px;border-radius:3px;border:1px solid rgba(23,35,52,.22);flex:none}
+.cbc-part-row em{margin-left:auto;font-style:normal;font-family:Manrope,sans-serif;font-weight:700;color:#9aa4b1}
+.cbc-part-row b{color:#1e8e4e;font-size:11px}
+.cbc-part-row.ok{opacity:1;border-color:#cfe8d8;background:#f4faf6}
+.cbc-part-row.ok em{color:#1e8e4e}
+
+/* label phase chips (draggable from the sidebar onto the scene) */
+.cbc-labels{display:flex;flex-wrap:wrap;gap:8px}
+.cbc-label-chip{
+  display:inline-flex;align-items:center;gap:7px;min-height:38px;padding:8px 13px;
+  border:1px solid #d9e0e8;border-radius:10px;background:#fff;
+  font-size:11px;font-weight:700;color:#4a5769;cursor:grab;touch-action:none;
+  transition:border-color .15s,background .15s,box-shadow .15s;
+}
+.cbc-label-chip i{width:11px;height:11px;border-radius:4px;border:1px solid rgba(23,35,52,.25)}
+.cbc-label-chip b{color:#1e8e4e;font-size:12px}
+.cbc-label-chip:hover:not(:disabled){border-color:#ffc79f;background:#fff8f2}
+.cbc-label-chip:disabled{cursor:default}
+.cbc-label-chip.placed{
+  border-style:dashed;color:#9aa4b1;background:#f7f9fb;
+  box-shadow:none;cursor:default;
+}
+.cbc-label-chip.dragging{border-color:var(--lab-accent);box-shadow:0 6px 16px #f9731629}
+.cbc-label-note{margin:10px 0 0;font-size:10px;line-height:1.6;color:var(--lab-muted)}
+
+/* function quiz card */
+.cbc-quiz-dots{display:flex;gap:6px;margin-bottom:10px}
+.cbc-quiz-dots span{
+  width:10px;height:10px;border-radius:50%;
+  background:#e3e8ef;border:1px solid #c9d2db;
+}
+.cbc-quiz-dots span.solved{background:#34c759;border-color:#27ae60}
+.cbc-quiz-dots span.now{border-color:var(--lab-accent);box-shadow:0 0 0 3px #f9731626}
+.cbc-quiz-q{
+  margin:0 0 10px;font-family:Manrope,sans-serif;font-size:13px;font-weight:800;
+  line-height:1.45;color:var(--lab-ink);
+}
+.cbc-quiz-keys{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.cbc-key-btn{
+  display:inline-flex;align-items:center;gap:7px;min-height:38px;padding:7px 10px;
+  border:1px solid #d9e0e8;border-radius:9px;background:#fff;
+  font-size:10.5px;font-weight:700;color:#4a5769;
+  transition:border-color .15s,background .15s;
+}
+.cbc-key-btn b{
+  flex:none;width:18px;height:18px;display:grid;place-items:center;
+  border-radius:6px;background:#f2f4f7;color:#7c8998;
+  font-family:Manrope,sans-serif;font-size:10px;font-weight:800;
+}
+.cbc-key-btn i{width:10px;height:10px;border-radius:3px;border:1px solid rgba(23,35,52,.25)}
+.cbc-key-btn:hover{border-color:#ffc79f;background:#fff8f2}
+.cbc-skip{margin-top:10px}
+
+/* observations tally + conclusion */
+.cbc-tally{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.cbc-tally>div{
+  display:flex;flex-direction:column;gap:4px;padding:11px 12px;
+  border:1px solid var(--lab-line);border-radius:10px;background:#f7f9fb;
+}
+.cbc-tally span{font-size:8.5px;font-weight:800;letter-spacing:.8px;color:var(--lab-muted)}
+.cbc-tally strong{font-family:Manrope,sans-serif;font-size:24px;font-weight:800;color:var(--lab-ink)}
+.cbc-tally small{font-size:9px;line-height:1.5;color:#5b6a7d}
+.cbc-conclude{display:flex;flex-direction:column;gap:9px;margin-top:6px}
+.cbc-conclude select{
+  width:100%;min-height:38px;padding:8px 10px;
+  border:1px solid #d9e0e8;border-radius:9px;background:#fff;
+  font:inherit;font-size:11px;font-weight:600;color:var(--lab-ink);
+}
+
+/* local duplicate of the shared hint row so this lab never depends on
+   another lab's stylesheet (engine.css owns the .hint-box variant) */
+.hint-row{display:flex;gap:8px;align-items:center;color:#8b97a5;font-size:9.5px;line-height:1.6;margin-top:14px}
+.hint-row span{color:#f97316;font-weight:800}
+
+@media(max-width:980px){
+  .cbc-tally{grid-template-columns:1fr 1fr 1fr;gap:8px}
+  .cbc-tally strong{font-size:20px}
+}
+@media(max-width:740px){
+  .cbc-selector{gap:6px}
+  .cbc-chip-btn{padding:8px 11px;font-size:10.5px}
+  .cbc-phase-row{margin-top:10px;gap:5px}
+  .cbc-quiz-keys{grid-template-columns:1fr 1fr;gap:6px}
+  .cbc-tally{grid-template-columns:1fr;gap:8px}
+  .cbc-label-chip{padding:8px 11px;font-size:10.5px}
+}
+@media(max-width:480px){
+  .cbc-quiz-keys{grid-template-columns:1fr}
+}

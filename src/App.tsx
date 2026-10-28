@@ -37,6 +37,17 @@ const LAB_COMPONENTS: Record<string, React.LazyExoticComponent<React.ComponentTy
   'copper-plating': lazy(() => import('./labs/copper-plating/CopperPlatingLab')),
   'water-of-crystallization': lazy(() => import('./labs/water-of-crystallization/CrystallizationLab')),
   'particle-model-diffusion': lazy(() => import('./labs/particle-model-diffusion/DiffusionLab')),
+  'virtual-microscope': lazy(() => import('./labs/virtual-microscope/MicroscopeLab')),
+  'build-a-cell': lazy(() => import('./labs/build-a-cell/CellBuilderLab')),
+  'photosynthesis-starch-test': lazy(() => import('./labs/photosynthesis-starch-test/PhotosynthesisLab')),
+  'transpiration-potometer': lazy(() => import('./labs/transpiration-potometer/TranspirationLab')),
+  'seed-germination': lazy(() => import('./labs/seed-germination/GerminationLab')),
+  'osmosis-potato': lazy(() => import('./labs/osmosis-potato/OsmosisLab')),
+  'food-tests': lazy(() => import('./labs/food-tests/FoodTestsLab')),
+  'respiration-in-seeds': lazy(() => import('./labs/respiration-in-seeds/SeedRespirationLab')),
+  'dna-model': lazy(() => import('./labs/dna-model/DnaLab')),
+  'heart-blood-flow': lazy(() => import('./labs/heart-blood-flow/HeartLab')),
+  'digestion-journey': lazy(() => import('./labs/digestion-journey/DigestionLab')),
 };
 
 export default function App() {

@@ -1,0 +1,379 @@
+/* digestion-journey — small custom styles (shared look lives in engine.css) */
+
+.dig-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* --- region / pH / clock strip ------------------------------------------- */
+.dig-now-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 10px;
+}
+
+.dig-now-chip,
+.dig-ph-chip,
+.dig-clock {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid #d7dee6;
+  background: #f7f9fb;
+  font-size: 12.5px;
+  color: #435062;
+  min-height: 38px;
+}
+
+.dig-now-chip strong {
+  color: #172334;
+}
+
+.dig-ph-chip.acid {
+  border-color: #e07a5f;
+  background: #fdf1ed;
+  color: #a4432c;
+}
+
+.dig-ph-chip.acid strong {
+  color: #c0392b;
+}
+
+.dig-clock {
+  font-variant-numeric: tabular-nums;
+  color: #5d6a79;
+}
+
+/* --- nutrient meters ------------------------------------------------------ */
+.dig-meters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 8px 14px;
+}
+
+.dig-meter {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas: 'label value' 'track track';
+  gap: 4px 8px;
+  font-size: 12px;
+  color: #5d6a79;
+}
+
+.dig-meter span {
+  grid-area: label;
+}
+
+.dig-meter strong {
+  grid-area: value;
+  color: #172334;
+  font-variant-numeric: tabular-nums;
+}
+
+.dig-meter-track {
+  grid-area: track;
+  height: 8px;
+  border-radius: 999px;
+  background: #e6ebf0;
+  overflow: hidden;
+}
+
+.dig-meter-track span {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.25s ease;
+}
+
+/* --- enzyme token cards ---------------------------------------------------- */
+.dig-tokens {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 10px;
+}
+
+.dig-token {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  border-radius: 12px;
+  border: 1px solid #d7dee6;
+  background: #f7f9fb;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dig-token.on {
+  border-color: #f97316;
+  box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.15);
+}
+
+.dig-token-dot {
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid rgba(23, 35, 52, 0.18);
+  box-shadow: inset -2px -2px 4px rgba(0, 0, 0, 0.12);
+}
+
+.dig-token-text {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.dig-token-text strong {
+  display: block;
+  font-size: 12.5px;
+  color: #172334;
+  line-height: 1.25;
+}
+
+.dig-token-text small {
+  display: block;
+  font-size: 11px;
+  color: #8a96a4;
+  margin-top: 2px;
+}
+
+.dig-token button {
+  flex: 0 0 auto;
+  min-height: 38px;
+  min-width: 74px;
+  padding: 6px 14px;
+  border-radius: 9px;
+  border: 1.5px solid #172334;
+  background: #fff;
+  color: #172334;
+  font-weight: 600;
+  font-size: 12.5px;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+
+.dig-token button:hover {
+  background: #172334;
+  color: #fff;
+}
+
+.dig-token button:active {
+  transform: scale(0.97);
+}
+
+.dig-token.on button {
+  border-color: #f97316;
+  color: #d96a16;
+  cursor: default;
+}
+
+/* --- region action mini buttons --------------------------------------------- */
+.dig-region-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.dig-mini {
+  flex: 1 1 150px;
+  min-height: 42px;
+  padding: 8px 16px;
+  border-radius: 10px;
+  border: 1.5px solid #b98d62;
+  background: #fdf8f1;
+  color: #7a5225;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+
+.dig-mini:hover:not(:disabled) {
+  background: #f6ecd9;
+}
+
+.dig-mini:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.dig-mini:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+/* --- enzyme state chips ------------------------------------------------------- */
+.dig-enzyme-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.dig-enzyme-chips span {
+  padding: 5px 12px;
+  border-radius: 999px;
+  border: 1px dashed #c3ccd6;
+  color: #8a96a4;
+  font-size: 11.5px;
+  background: #fbfcfd;
+}
+
+.dig-enzyme-chips span.on {
+  border-style: solid;
+  border-color: #8aa84f;
+  color: #5c7030;
+  background: #f4f7ea;
+}
+
+/* --- pH strip in the sidebar --------------------------------------------------- */
+.dig-ph-strip {
+  margin-top: 12px;
+}
+
+.dig-ph-scale {
+  position: relative;
+  height: 10px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #d64541 0%, #e08a4f 35%, #8fb07a 50%, #6f9ac0 65%, #4d7fae 100%);
+}
+
+.dig-ph-marker {
+  position: absolute;
+  top: 50%;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  border: 2.5px solid #172334;
+  box-shadow: 0 1px 3px rgba(23, 35, 52, 0.3);
+}
+
+.dig-ph-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10.5px;
+  color: #8a96a4;
+  margin-top: 4px;
+}
+
+/* --- observations: tables, chart, conclusion ----------------------------------- */
+.dig-table {
+  width: 100%;
+  font-size: 12.5px;
+}
+
+.dig-table th,
+.dig-table td {
+  padding: 6px 8px;
+  text-align: left;
+}
+
+.dig-enzymes tr {
+  opacity: 0.55;
+  transition: opacity 0.25s ease;
+}
+
+.dig-enzymes tr.used {
+  opacity: 1;
+}
+
+.dig-enzymes tr.used td:first-child {
+  box-shadow: inset 3px 0 0 #f97316;
+}
+
+.dig-chart {
+  width: 100%;
+  height: auto;
+  background: #f7f9fb;
+  border: 1px solid #e2e8ee;
+  border-radius: 10px;
+  padding: 4px;
+}
+
+.dig-chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  margin-top: 8px;
+  font-size: 11.5px;
+  color: #5d6a79;
+}
+
+.dig-chart-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.dig-chart-legend i {
+  width: 14px;
+  height: 4px;
+  border-radius: 2px;
+}
+
+.dig-conclusion {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px;
+  border-radius: 12px;
+  border: 1px solid #d7dee6;
+  background: #f7f9fb;
+}
+
+.dig-conclusion label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 12.5px;
+  color: #435062;
+  font-weight: 600;
+}
+
+.dig-conclusion select {
+  min-height: 40px;
+  border-radius: 9px;
+  border: 1.5px solid #c3ccd6;
+  background: #fff;
+  padding: 6px 10px;
+  font-size: 12.5px;
+  color: #172334;
+  font-weight: 400;
+}
+
+.dig-conclusion .record-button {
+  align-self: flex-start;
+}
+
+.dig-conclusion-ok {
+  margin: 0;
+  font-size: 12.5px;
+  color: #5c7030;
+  font-weight: 600;
+}
+
+/* --- phones ---------------------------------------------------------------------- */
+@media (max-width: 640px) {
+  .dig-tokens {
+    grid-template-columns: 1fr;
+  }
+
+  .dig-meters {
+    grid-template-columns: 1fr;
+  }
+
+  .dig-mini {
+    flex: 1 1 120px;
+  }
+
+  .dig-token button {
+    min-width: 64px;
+  }
+
+  .dig-now-row {
+    font-size: 12px;
+  }
+}

@@ -1,0 +1,381 @@
+/* Osmosis-potato lab styles (everything shared lives in engine.css). */
+
+/* scene wrapper: canvas fills it, beaker labels overlay the bottom strip */
+.osm-stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.osm-beaker-labels {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 26px;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 2px;
+  padding: 0 2px;
+  pointer-events: none;
+}
+
+.osm-blabel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.15;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.45);
+  border: 1px solid rgba(178, 192, 205, 0.55);
+  transition: background 0.25s, border-color 0.25s;
+}
+
+.osm-blabel strong {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.2px;
+  color: #44536a;
+}
+
+.osm-blabel small {
+  font-size: 7px;
+  font-weight: 600;
+  color: #8b97a5;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+
+.osm-blabel.filled {
+  background: rgba(249, 115, 22, 0.12);
+  border-color: rgba(249, 115, 22, 0.5);
+}
+
+.osm-blabel.filled strong {
+  color: #c2551a;
+}
+
+/* control panel: three action buttons in a row */
+.osm-actions {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.osm-soak-btn {
+  margin-top: 12px;
+  width: 100%;
+}
+
+/* digital balance DOM readout */
+.osm-balance {
+  margin-top: 14px;
+  padding: 14px 16px;
+  border: 1px solid var(--lab-line);
+  border-radius: 10px;
+  background: #f7f9fb;
+}
+
+.osm-balance-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.osm-balance-head span {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: #8b97a5;
+}
+
+.osm-balance-head span:last-child {
+  color: #7c8998;
+}
+
+.osm-balance.settling .osm-balance-head span:last-child {
+  color: #d97706;
+}
+
+.osm-balance.locked .osm-balance-head span:last-child {
+  color: #178a4c;
+}
+
+.osm-digits {
+  display: block;
+  margin-top: 4px;
+  font-family: Manrope, sans-serif;
+  font-size: 34px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  color: #172334;
+}
+
+.osm-digits small {
+  font-size: 13px;
+  color: #8793a1;
+  letter-spacing: 0;
+}
+
+.osm-balance.settling .osm-digits {
+  color: #b6842c;
+  animation: osm-flicker 0.12s steps(2) infinite;
+}
+
+.osm-balance.locked .osm-digits {
+  color: #0f7a45;
+}
+
+.osm-balance-sub {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-top: 6px;
+}
+
+.osm-balance-sub span {
+  font-size: 10px;
+  color: #7c8998;
+}
+
+.osm-balance-sub strong {
+  font-family: Manrope, sans-serif;
+  font-size: 15px;
+  font-weight: 800;
+  color: #38465a;
+}
+
+.osm-carrying {
+  margin: 8px 0 0;
+  font-size: 9.5px;
+  line-height: 1.5;
+  color: #c2551a;
+}
+
+@keyframes osm-flicker {
+  0% { opacity: 1; }
+  50% { opacity: 0.55; }
+  100% { opacity: 1; }
+}
+
+/* soak clock */
+.osm-clock {
+  margin-top: 14px;
+  padding: 12px 16px;
+  border: 1px solid var(--lab-line);
+  border-radius: 10px;
+  background: #f7f9fb;
+}
+
+.osm-clock-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.osm-clock-head span {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: #8b97a5;
+}
+
+.osm-clock-head strong {
+  font-family: Manrope, sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: #172334;
+}
+
+.osm-clock-head strong small {
+  font-size: 10px;
+  color: #8b97a5;
+  letter-spacing: 0;
+}
+
+.osm-clock-track {
+  margin-top: 7px;
+  height: 6px;
+  border-radius: 6px;
+  background: #e3e8ef;
+  overflow: hidden;
+}
+
+.osm-clock-track span {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #7fc3e8, #4a90d9);
+  border-radius: 6px;
+  transition: width 0.25s;
+}
+
+/* cylinder status chips */
+.osm-chk {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.osm-chk-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 30px;
+  padding: 5px 11px;
+  border-radius: 16px;
+  font-size: 10px;
+  font-weight: 800;
+  color: #536276;
+  background: #eef2f6;
+  border: 1px solid #d5dde6;
+}
+
+.osm-chk-chip i {
+  font-style: normal;
+  color: #9aa6b3;
+}
+
+.osm-chk-chip.weighed {
+  background: #fdf3e3;
+  border-color: #ecc27c;
+  color: #9a6a1c;
+}
+
+.osm-chk-chip.weighed i {
+  color: #c98a63;
+}
+
+.osm-chk-chip.placed,
+.osm-chk-chip.bathing {
+  background: #e8f2fa;
+  border-color: #a9cbe6;
+  color: #2c6a99;
+}
+
+.osm-chk-chip.placed i,
+.osm-chk-chip.bathing i {
+  color: #6aa4cf;
+}
+
+.osm-chk-chip.done {
+  background: #e9f7ee;
+  border-color: #a4d9b8;
+  color: #178a4c;
+}
+
+.osm-chk-chip.done i {
+  color: #4fae76;
+}
+
+/* observation tab extras */
+.osm-table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.osm-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.osm-chip {
+  min-height: 38px;
+  padding: 9px 15px;
+  border-radius: 20px;
+  border: 1.5px solid #cdd6e0;
+  background: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  color: #44536a;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, transform 0.1s;
+}
+
+.osm-chip:hover:not(:disabled) {
+  border-color: #f97316;
+  background: #fff7f0;
+}
+
+.osm-chip:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.osm-chip:disabled {
+  cursor: default;
+  opacity: 0.75;
+}
+
+.osm-chip.correct {
+  border-color: #2f9e63;
+  background: #e9f7ee;
+  color: #14713d;
+  opacity: 1;
+}
+
+.osm-chip.wrong {
+  border-color: #e05252;
+  background: #fdeeee;
+  color: #b03636;
+  opacity: 1;
+}
+
+.osm-final-note {
+  border-left: 3px solid #2f9e63;
+  padding-left: 10px;
+  color: #38604a;
+}
+
+/* responsive */
+@media (max-width: 980px) {
+  .osm-actions {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+}
+
+@media (max-width: 740px) {
+  .osm-actions {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .osm-actions .action-button:first-child {
+    grid-column: 1 / -1;
+  }
+
+  .osm-digits {
+    font-size: 28px;
+  }
+
+  .osm-blabel small {
+    display: none;
+  }
+
+  .osm-blabel strong {
+    font-size: 8px;
+  }
+}
+
+@media (max-width: 460px) {
+  .osm-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .osm-actions .action-button:first-child {
+    grid-column: auto;
+  }
+
+  .osm-chips {
+    gap: 8px;
+  }
+
+  .osm-chip {
+    flex: 1 1 40%;
+  }
+}

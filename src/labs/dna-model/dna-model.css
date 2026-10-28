@@ -1,0 +1,84 @@
+/* DNA-model-lab-specific styles (everything shared lives in engine.css). */
+
+/* -- control panel layout ------------------------------------------------- */
+
+.dna-layout{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:16px;align-items:start;margin-top:16px}
+.dna-actions{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.dna-actions .action-button{min-height:56px}
+
+.dna-progress{display:flex;flex-direction:column;gap:10px;padding:12px 14px;border:1px solid var(--lab-line);border-radius:10px;background:#f7f9fb}
+.dna-prog-row{display:flex;align-items:center;gap:10px}
+.dna-prog-row>span{font-size:10px;font-weight:700;color:#536276;min-width:104px}
+.dna-prog-row>div{flex:1;height:6px;background:#e3e8ef;border-radius:6px;overflow:hidden}
+.dna-prog-row>div>span{display:block;height:100%;background:linear-gradient(90deg,#f9a46a,#f97316);border-radius:6px;transition:width .25s}
+.dna-prog-row>strong{font-size:11px;font-family:Manrope,sans-serif;color:#172334;white-space:nowrap}
+.dna-prog-row.tight>div{display:none}
+.dna-prog-row.tight>span{flex:1}
+
+/* -- toolbar zoom cluster --------------------------------------------------- */
+
+.dna-zoom{display:flex;gap:4px;margin-right:6px}
+.dna-zoom button{min-width:38px;min-height:38px;padding:0 10px;border:1px solid var(--lab-line);border-radius:8px;background:#fff;color:#172334;font-family:Manrope,sans-serif;font-size:17px;font-weight:700;cursor:pointer;transition:border-color .15s,background .15s}
+.dna-zoom button:hover{border-color:#f97316;background:#fff7f0}
+
+/* -- tip row (mirrors the reference lab's locally-defined tip row) ------------ */
+
+.hint-row{display:flex;gap:8px;align-items:center;color:#8b97a5;font-size:9.5px;line-height:1.6;margin-top:12px}
+.hint-row span{color:#f97316;font-weight:800}
+
+/* -- sidebar hover chip ------------------------------------------------------ */
+
+.dna-pairchip{margin-top:14px;padding:10px 12px;border-radius:9px;border:1px dashed #d7dee6;background:#fbfcfd;font-size:10.5px;font-weight:700;color:#536276;line-height:1.5;min-height:38px;display:flex;align-items:center}
+
+/* -- base-sequence strip (DOM, never canvas text) ----------------------------- */
+
+.dna-strip{margin-top:12px;padding:10px 12px;border:1px solid var(--lab-line);border-radius:9px;background:#f7f9fb}
+.dna-strip-title{font-size:9px;font-weight:800;letter-spacing:1px;color:#8b97a5;margin-bottom:7px}
+.dna-strip-row{display:flex;align-items:center;gap:8px;padding:2px 0}
+.dna-strip-label{font-size:9px;font-weight:800;color:#8b97a5;width:52px;flex:none;letter-spacing:.4px}
+.dna-strip-letters{display:flex;flex-wrap:wrap;gap:2px}
+.dna-b{display:inline-flex;align-items:center;justify-content:center;width:15px;height:17px;border-radius:4px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:10.5px;font-weight:800;color:#fff;line-height:1}
+.dna-b-A{background:#3fae6a}
+.dna-b-T{background:#e05555}
+.dna-b-G{background:#f0932b}
+.dna-b-C{background:#4a7fd6}
+.dna-b-empty{background:#e3e8ef;color:#aab4c0}
+
+/* -- Chargaff bars + conclusion card ------------------------------------------- */
+
+.dna-bars{display:flex;flex-direction:column;gap:8px;margin:10px 0 4px}
+.dna-bar-row{display:flex;align-items:center;gap:8px}
+.dna-bar-row>.dna-b{flex:none}
+.dna-bar-track{flex:1;height:12px;background:#e9edf2;border-radius:7px;overflow:hidden}
+.dna-bar-fill{display:block;height:100%;border-radius:7px;transition:width .35s}
+.dna-bar-fill.dna-b-A{background:linear-gradient(90deg,#63c288,#3fae6a)}
+.dna-bar-fill.dna-b-T{background:linear-gradient(90deg,#ea8080,#e05555)}
+.dna-bar-fill.dna-b-G{background:linear-gradient(90deg,#f5b264,#f0932b)}
+.dna-bar-fill.dna-b-C{background:linear-gradient(90deg,#7fa1e0,#4a7fd6)}
+.dna-bar-row>strong{font-size:10px;font-family:Manrope,sans-serif;color:#172334;white-space:nowrap;min-width:74px;text-align:right}
+
+.dna-conclusion{display:flex;flex-direction:column;gap:12px;padding:14px;border:1px solid var(--lab-line);border-radius:10px;background:#f7f9fb}
+.dna-conclusion label{display:flex;flex-direction:column;gap:6px;font-size:11px;font-weight:700;color:#536276}
+.dna-conclusion select{min-height:38px;padding:6px 10px;border:1px solid #cfd8e1;border-radius:8px;background:#fff;font-family:inherit;font-size:13px;color:#172334}
+.dna-conclusion textarea{padding:9px 11px;border:1px solid #cfd8e1;border-radius:8px;background:#fff;font-family:inherit;font-size:12.5px;line-height:1.55;color:#172334;resize:vertical}
+.dna-conclusion .record-button{min-height:42px}
+.dna-feedback{margin:0;font-size:11px;line-height:1.6;color:#b3550e;background:#fff6ee;border:1px solid #f3cf9f;border-radius:8px;padding:9px 11px}
+.dna-feedback.ok{color:#1d7a4b;background:#effaf3;border-color:#b5e2c6}
+
+/* -- sequence table letter colouring ---------------------------------------------- */
+
+.trial-table .dna-td{font-weight:800}
+
+/* -- responsive ------------------------------------------------------------------- */
+
+@media(max-width:980px){
+  .dna-layout{grid-template-columns:minmax(0,1fr)}
+  .dna-actions{grid-template-columns:1fr 1fr}
+}
+@media(max-width:740px){
+  .dna-actions{grid-template-columns:1fr}
+  .dna-prog-row>span{min-width:88px;font-size:9.5px}
+  .dna-strip-label{width:46px}
+  .dna-b{width:13px;height:16px;font-size:9.5px}
+  .dna-zoom button{min-width:42px}
+}

@@ -1,0 +1,261 @@
+/* Respiration in seeds — custom styles (engine.css provides the shared shell). */
+
+.resp-canvas {
+  touch-action: none;
+  cursor: pointer;
+}
+
+.resp-canvas:focus-visible {
+  outline: 2px solid #f97316;
+  outline-offset: -2px;
+}
+
+/* ---- control panel action grids ---- */
+
+.resp-actions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.resp-actions-2 .action-button {
+  min-height: 40px;
+  padding: 8px 10px;
+}
+
+.resp-actions .action-button span:nth-child(2) {
+  font-size: 13.5px;
+}
+
+/* ---- live strip: clock + vial chips + airflow ---- */
+
+.resp-live {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: stretch;
+  margin: 4px 0 10px;
+}
+
+.resp-clock,
+.resp-vialchip,
+.resp-flow {
+  background: #f5f8fa;
+  border: 1px solid #dce4ea;
+  border-radius: 10px;
+  padding: 8px 12px;
+  min-width: 128px;
+  min-height: 58px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+}
+
+.resp-clock span,
+.resp-vialchip span,
+.resp-flow span {
+  font-size: 9.5px;
+  letter-spacing: 0.09em;
+  font-weight: 700;
+  color: #7a8795;
+}
+
+.resp-clock strong {
+  font-size: 22px;
+  color: #172334;
+  font-variant-numeric: tabular-nums;
+}
+
+.resp-vialchip strong {
+  font-size: 15px;
+  color: #172334;
+  font-variant-numeric: tabular-nums;
+}
+
+.resp-vialchip.a span { color: #c2602a; }
+.resp-vialchip.b span { color: #4c6480; }
+
+.resp-vialchip.milky strong { color: #8a6420; }
+
+.resp-track {
+  height: 5px;
+  border-radius: 3px;
+  background: #e2e8ee;
+  overflow: hidden;
+}
+
+.resp-track span {
+  display: block;
+  height: 100%;
+  border-radius: 3px;
+  background: linear-gradient(90deg, #d9a441, #f2f0e6);
+  transition: width 0.25s ease;
+}
+
+.resp-vialchip.a .resp-track span { background: linear-gradient(90deg, #f9a25a, #f2f0e6); }
+.resp-vialchip.b .resp-track span { background: linear-gradient(90deg, #7d9ab5, #f2f0e6); }
+
+.resp-flow {
+  min-width: 96px;
+}
+
+.resp-flow .resp-track span {
+  background: linear-gradient(90deg, #6fa3c9, #9fd0a8);
+}
+
+/* ---- conclusion card ---- */
+
+.resp-conclusion {
+  border: 1px solid #dce4ea;
+  border-radius: 12px;
+  padding: 12px 14px;
+  background: #f7f9fb;
+  margin-bottom: 6px;
+}
+
+.resp-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.resp-options button {
+  font: inherit;
+  font-size: 13.5px;
+  line-height: 1.4;
+  text-align: left;
+  padding: 11px 14px;
+  min-height: 44px;
+  border-radius: 10px;
+  border: 1.5px solid #cdd8e1;
+  background: #fff;
+  color: #2a3b4f;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease, transform 0.05s ease;
+}
+
+.resp-options button:hover {
+  border-color: #f97316;
+  background: #fff8f2;
+}
+
+.resp-options button:active {
+  transform: translateY(1px);
+}
+
+.resp-evidence {
+  margin-top: 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: #fdf3e7;
+  border: 1px solid #f2cf9e;
+  color: #7a4a1c;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.resp-verdict {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 12px;
+  border-radius: 10px;
+  background: #edf7ec;
+  border: 1px solid #b8d8b2;
+}
+
+.resp-verdict > span {
+  font-size: 22px;
+  color: #3f8f4f;
+  line-height: 1;
+}
+
+.resp-verdict strong { color: #2c6b38; }
+
+.resp-verdict p {
+  margin: 4px 0 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #33503a;
+}
+
+/* ---- charts ---- */
+
+.resp-chart {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: #fff;
+  border: 1px solid #e2e8ee;
+  border-radius: 10px;
+}
+
+.resp-chartkey {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 6px;
+}
+
+.resp-chartkey span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  color: #5d6a79;
+}
+
+.resp-chartkey i {
+  width: 14px;
+  height: 4px;
+  border-radius: 2px;
+  display: inline-block;
+}
+
+/* ---- phones ---- */
+
+@media (max-width: 760px) {
+  .resp-actions {
+    grid-template-columns: repeat(auto-fit, minmax(132px, 1fr));
+    gap: 8px;
+  }
+
+  .resp-actions .action-button {
+    min-height: 48px;
+  }
+
+  .resp-live {
+    gap: 8px;
+  }
+
+  .resp-clock,
+  .resp-vialchip,
+  .resp-flow {
+    min-width: 112px;
+    min-height: 54px;
+    padding: 7px 10px;
+    flex: 1 1 44%;
+  }
+
+  .resp-clock strong { font-size: 18px; }
+
+  .resp-options button {
+    font-size: 12.5px;
+    padding: 10px 12px;
+  }
+}
+
+@media (max-width: 420px) {
+  .resp-actions {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .resp-clock,
+  .resp-vialchip,
+  .resp-flow {
+    flex: 1 1 100%;
+  }
+}

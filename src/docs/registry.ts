@@ -26,6 +26,17 @@ import { reactionRateDocs } from '../labs/reaction-rate/docs';
 import { copperPlatingDocs } from '../labs/copper-plating/docs';
 import { crystallizationDocs } from '../labs/water-of-crystallization/docs';
 import { diffusionDocs } from '../labs/particle-model-diffusion/docs';
+import { microscopeDocs } from '../labs/virtual-microscope/docs';
+import { cellBuilderDocs } from '../labs/build-a-cell/docs';
+import { photosynthesisDocs } from '../labs/photosynthesis-starch-test/docs';
+import { transpirationDocs } from '../labs/transpiration-potometer/docs';
+import { germinationDocs } from '../labs/seed-germination/docs';
+import { osmosisDocs } from '../labs/osmosis-potato/docs';
+import { foodTestsDocs } from '../labs/food-tests/docs';
+import { seedRespirationDocs } from '../labs/respiration-in-seeds/docs';
+import { dnaDocs } from '../labs/dna-model/docs';
+import { heartDocs } from '../labs/heart-blood-flow/docs';
+import { digestionDocs } from '../labs/digestion-journey/docs';
 import { getLabByDocsSlug } from '../engine/catalog';
 
 /**
@@ -68,4 +79,15 @@ export const DOCS_REGISTRY: Record<string, { meta: LabMeta; docs: DocsContent }>
   'copper-electroplating-virtual-lab': entry('copper-electroplating-virtual-lab', copperPlatingDocs),
   'water-of-crystallisation-copper-sulfate-virtual-lab': entry('water-of-crystallisation-copper-sulfate-virtual-lab', crystallizationDocs),
   'particle-model-and-diffusion-virtual-lab': entry('particle-model-and-diffusion-virtual-lab', diffusionDocs),
+  'virtual-microscope-lab-onion-cheek-cells': entry('virtual-microscope-lab-onion-cheek-cells', microscopeDocs),
+  'plant-and-animal-cell-virtual-lab': entry('plant-and-animal-cell-virtual-lab', cellBuilderDocs),
+  'photosynthesis-starch-test-virtual-lab': entry('photosynthesis-starch-test-virtual-lab', photosynthesisDocs),
+  'transpiration-potometer-virtual-lab': entry('transpiration-potometer-virtual-lab', transpirationDocs),
+  'seed-germination-virtual-lab': entry('seed-germination-virtual-lab', germinationDocs),
+  'osmosis-in-potato-cells-virtual-lab': entry('osmosis-in-potato-cells-virtual-lab', osmosisDocs),
+  'food-test-virtual-lab-benedicts-iodine': entry('food-test-virtual-lab-benedicts-iodine', foodTestsDocs),
+  'respiration-in-germinating-seeds-virtual-lab': entry('respiration-in-germinating-seeds-virtual-lab', seedRespirationDocs),
+  'dna-structure-and-replication-virtual-lab': entry('dna-structure-and-replication-virtual-lab', dnaDocs),
+  'heart-structure-and-blood-flow-virtual-lab': entry('heart-structure-and-blood-flow-virtual-lab', heartDocs),
+  'digestive-system-virtual-lab': entry('digestive-system-virtual-lab', digestionDocs),
 };

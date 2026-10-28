@@ -1,0 +1,106 @@
+/* Virtual-microscope lab specific styles (everything shared lives in engine.css). */
+
+.micro-layout{display:grid;grid-template-columns:minmax(0,1.02fr) minmax(0,1fr);gap:16px;align-items:start;margin-top:2px}
+.micro-block{padding:12px 14px;border:1px solid var(--lab-line);border-radius:10px;background:var(--lab-soft)}
+.micro-block-title{display:block;margin-bottom:10px;font-size:8.5px;font-weight:800;letter-spacing:1.2px;color:#8b97a5}
+
+/* objective turret segment */
+.micro-objseg{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.micro-objseg button{display:flex;flex-direction:column;align-items:center;gap:3px;min-height:54px;padding:9px 6px;border:1px solid #d9e0e8;border-radius:9px;background:#fff;transition:border-color .15s,background .15s,transform .1s}
+.micro-objseg button:hover{border-color:var(--lab-accent);background:#fff8f2}
+.micro-objseg button:active{transform:scale(.96)}
+.micro-objseg button.active{border-color:#f0c9a8;background:#fff8f2;box-shadow:0 3px 10px #f9731614}
+.micro-objseg button i{width:13px;height:13px;border-radius:50%;border:1px solid rgba(23,35,52,.25)}
+.micro-objseg button span{font-family:Manrope,sans-serif;font-size:12px;font-weight:800;color:#172334}
+.micro-objseg button small{font-size:8.5px;font-weight:600;color:#9aa4b1}
+
+/* coarse / fine knob button pairs */
+.micro-knobs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.micro-knobs>div>span{display:block;margin-bottom:6px;font-size:8.5px;font-weight:800;letter-spacing:1px;color:#8b97a5}
+.micro-knobpair{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.micro-knobpair button{min-height:40px;padding:8px 6px;border:1px solid #d9e0e8;border-radius:9px;background:#fff;font-size:10px;font-weight:700;color:#4a5769;transition:border-color .15s,background .15s,transform .1s}
+.micro-knobpair button:hover{border-color:var(--lab-accent);background:#fff8f2}
+.micro-knobpair button:active{transform:scale(.95)}
+
+/* slide box buttons */
+.micro-slides{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.micro-slidebtn{display:flex;flex-direction:column;align-items:flex-start;gap:4px;min-height:58px;padding:10px 11px;border:1px dashed #d9e0e8;border-radius:10px;background:#fff;text-align:left;transition:border-color .15s,background .15s,transform .1s}
+.micro-slidebtn i{width:14px;height:14px;border-radius:4px;border:1px solid #c9d2db}
+.micro-slidebtn span{font-size:10.5px;font-weight:800;color:#172334}
+.micro-slidebtn small{font-size:8.5px;font-weight:600;color:#9aa4b1;line-height:1.4}
+.micro-slidebtn:hover{border-color:var(--lab-accent);background:#fff8f2;border-style:solid}
+.micro-slidebtn:active{transform:scale(.97)}
+.micro-slidebtn.on-stage{border-style:solid;border-color:#cfe8d8;background:#f4faf6}
+.micro-slidebtn.on-stage small{color:#1e8e4e}
+.micro-slidebtn.on-stage.cracked{border-color:#f3d6c4;background:#fdf3ea}
+.micro-slidebtn.on-stage.cracked small{color:#c2560f}
+
+/* small toggles */
+.micro-toggles{display:grid;grid-template-columns:1.1fr 1fr 1.2fr;gap:8px;margin-top:14px}
+.micro-toggles button{min-height:40px;padding:8px 10px;border:1px solid #d9e0e8;border-radius:9px;background:#fff;font-size:10px;font-weight:700;color:#4a5769;transition:border-color .15s,background .15s,transform .1s}
+.micro-toggles button:hover:not(:disabled){border-color:var(--lab-accent);background:#fff8f2}
+.micro-toggles button:active:not(:disabled){transform:scale(.96)}
+.micro-toggles button:disabled{opacity:.45;cursor:not-allowed}
+.micro-toggles button.on{border-color:#f0c9a8;background:#fff8f2;color:#b3431f;font-weight:800}
+
+/* sharpness + graticule chips + assist */
+.micro-chiprow{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1.2fr);gap:12px;align-items:stretch;margin-top:16px}
+.micro-chip{display:flex;flex-direction:column;gap:5px;padding:12px 14px;border:1px solid var(--lab-line);border-radius:10px;background:var(--lab-soft)}
+.micro-chip>span{font-size:8.5px;font-weight:800;letter-spacing:1px;color:#8b97a5;text-transform:uppercase}
+.micro-chip>strong{font-family:Manrope,sans-serif;font-size:24px;font-weight:800;letter-spacing:-.5px;color:#172334}
+.micro-chip>strong.sharp{color:#1e8e4e}
+.micro-chip .micro-track{height:6px;border-radius:6px;background:#e3e8ef;overflow:hidden}
+.micro-chip .micro-track span{display:block;height:100%;border-radius:6px;background:linear-gradient(90deg,#f9a46a,#34c759);transition:width .2s}
+.micro-chip>small{font-size:9px;color:#8b97a5}
+
+/* conclusion card */
+.micro-conclude{margin-top:16px;padding:13px 14px;border:1px solid var(--lab-line);border-radius:10px;background:var(--lab-soft)}
+.micro-conclude>span{font-size:8.5px;font-weight:800;letter-spacing:1.2px;color:#8b97a5}
+.micro-conclude>small{display:block;margin-top:8px;font-size:9px;line-height:1.5;color:#8b97a5;font-weight:600}
+.mic-q{margin-top:12px}
+.mic-q>strong{display:block;font-size:11px;font-weight:800;color:#172334}
+.mic-opts{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:8px}
+.mic-opts button{padding:11px 10px;min-height:44px;border:1px solid #d9e0e8;border-radius:9px;background:#fff;font-size:10px;font-weight:700;color:#4a5769;line-height:1.4;transition:border-color .15s,background .15s,transform .1s}
+.mic-opts button:hover:not(:disabled){border-color:var(--lab-accent);background:#fff8f2}
+.mic-opts button:active:not(:disabled){transform:scale(.97)}
+.mic-opts button:disabled{opacity:.5;cursor:not-allowed}
+.mic-opts button.correct{border-color:#cfe8d8;background:#f4faf6;color:#1e8e4e;font-weight:800}
+
+/* sidebar status panel */
+.mic-status{margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.mic-status>div{padding:10px 11px;border:1px solid var(--lab-line);border-radius:9px;background:#fff}
+.mic-status span{display:block;font-size:8.5px;font-weight:700;letter-spacing:.6px;color:#8b97a5;text-transform:uppercase}
+.mic-status strong{display:block;margin-top:3px;font-family:Manrope,sans-serif;font-size:12.5px;font-weight:800;color:#172334}
+
+/* observations: differences checklist */
+.mic-spots{display:flex;flex-direction:column;gap:8px;margin-top:4px}
+.mic-spot{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px dashed #d9e0e8;border-radius:9px;background:#fff}
+.mic-spot i{flex:none;width:22px;height:22px;display:grid;place-items:center;border-radius:50%;background:#e8edf2;color:#7c8998;font-size:11px;font-weight:800;font-style:normal}
+.mic-spot>div{flex:1;min-width:0}
+.mic-spot strong{display:block;font-size:10.5px;font-weight:800;color:#172334}
+.mic-spot span{display:block;margin-top:2px;font-size:9px;font-weight:600;color:#9aa4b1;line-height:1.45}
+.mic-spot em{flex:none;font-style:normal;font-size:8.5px;font-weight:800;letter-spacing:.4px;color:#8b97a5;text-transform:uppercase}
+.mic-spot.done{border-style:solid;border-color:#cfe8d8;background:#f4faf6}
+.mic-spot.done i{background:#d8f0e0;color:#1e8e4e}
+.mic-spot.done em{color:#1e8e4e}
+
+.mic-chart-legend{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 8px;font-size:9.5px;font-weight:700;color:#5b6a7d}
+.mic-chart-legend span{display:inline-flex;align-items:center;gap:5px}
+.mic-chart-legend i{width:11px;height:11px;border-radius:3px;border:1px solid #c9d2db}
+
+.hint-row{display:flex;gap:8px;align-items:center;color:#8b97a5;font-size:9.5px;line-height:1.6;margin-top:14px}
+.hint-row span{color:#f97316;font-weight:800}
+
+@media(max-width:980px){
+  .micro-layout{grid-template-columns:minmax(0,1fr)}
+  .micro-chiprow{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .micro-chiprow .action-button{grid-column:1 / -1}
+}
+@media(max-width:740px){
+  .micro-slides{grid-template-columns:1fr}
+  .micro-toggles{grid-template-columns:1fr}
+  .micro-chiprow{grid-template-columns:1fr}
+  .mic-opts{grid-template-columns:1fr}
+  .mic-status{grid-template-columns:1fr}
+  .micro-objseg button span{font-size:11px}
+}

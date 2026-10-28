@@ -1,0 +1,304 @@
+/* Photosynthesis: starch test — lab-local styles (shared shell styles live in engine.css). */
+
+/* Scene canvas: grabbing leaves should never scroll the page on touch. */
+[data-lab='photosynthesis-starch-test'] .scene-frame canvas {
+  touch-action: none;
+  cursor: grab;
+}
+[data-lab='photosynthesis-starch-test'] .scene-frame canvas:active {
+  cursor: grabbing;
+}
+
+/* ---- control panel layout ------------------------------------------------ */
+.photo-controls {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: 14px;
+  align-items: stretch;
+}
+
+.photo-main {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.photo-main .action-button {
+  min-height: 58px;
+}
+
+.photo-mini {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.photo-mini .text-button {
+  flex: 1 1 140px;
+  min-height: 38px;
+}
+
+/* ---- simulated clock card ------------------------------------------------- */
+.photo-clock {
+  border: 1px solid var(--lab-line, #dfe5ec);
+  border-radius: 12px;
+  background: var(--lab-soft, #f6f8fa);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.photo-clock > span {
+  font-size: 8.5px;
+  font-weight: 800;
+  letter-spacing: 1.4px;
+  color: var(--lab-muted, #7c8998);
+}
+
+.photo-clock > strong {
+  font-family: 'Manrope', sans-serif;
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.8px;
+  color: var(--lab-ink, #172334);
+}
+
+.photo-progress {
+  height: 7px;
+  border-radius: 6px;
+  background: #e3e8ef;
+  overflow: hidden;
+}
+
+.photo-progress span {
+  display: block;
+  height: 100%;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #6fbf5a, #3f8f3a);
+  transition: width 0.25s;
+}
+
+.photo-clock .photo-stage {
+  margin: 0;
+  font-size: 10.5px;
+  font-weight: 600;
+  color: #5b6a7d;
+  line-height: 1.45;
+}
+
+/* ---- leaf inventory chips -------------------------------------------------- */
+.photo-inv {
+  margin-top: 14px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.photo-inv-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 11px;
+  min-height: 38px;
+  border-radius: 999px;
+  border: 1px solid #dfe5ec;
+  background: #fff;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #435062;
+  line-height: 1.2;
+}
+
+.photo-inv-chip i {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  flex: none;
+  border: 1.5px solid rgba(23, 35, 52, 0.18);
+}
+
+.photo-inv-chip.k-variegated-light i {
+  background: radial-gradient(circle at center, #ece5c3 42%, #4c8a3f 44%);
+}
+
+.photo-inv-chip.k-green-light i {
+  background: #4c8a3f;
+}
+
+.photo-inv-chip.k-green-dark i {
+  background: #3c7434;
+  box-shadow: inset 0 0 0 10px rgba(10, 14, 8, 0.55);
+}
+
+.photo-inv-chip.busy {
+  border-color: #f3c9a6;
+  background: #fff8f2;
+}
+
+.photo-inv-chip.tested {
+  border-color: #232b47;
+  background: #f0f2f7;
+}
+
+.photo-inv-chip b {
+  font-weight: 800;
+  color: #232b47;
+}
+
+/* ---- observations: swatches, bars, conclusion ------------------------------- */
+.photo-swatch {
+  display: inline-block;
+  width: 11px;
+  height: 11px;
+  border-radius: 3px;
+  margin-right: 6px;
+  vertical-align: -1px;
+  border: 1px solid rgba(23, 35, 52, 0.25);
+}
+
+.photo-swatch.sw-blue {
+  background: #232b47;
+}
+
+.photo-swatch.sw-brown {
+  background: #b06a22;
+}
+
+.photo-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin-top: 6px;
+}
+
+.photo-bar-row {
+  display: grid;
+  grid-template-columns: minmax(96px, 150px) 1fr 42px;
+  align-items: center;
+  gap: 10px;
+}
+
+.photo-bar-row > span {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #435062;
+}
+
+.photo-bar-track {
+  height: 14px;
+  border-radius: 7px;
+  background: #e9edf2;
+  overflow: hidden;
+}
+
+.photo-bar-track span {
+  display: block;
+  height: 100%;
+  border-radius: 7px;
+  background: linear-gradient(90deg, #2c3757, #232b47);
+}
+
+.photo-bar-row > strong {
+  font-family: 'Manrope', sans-serif;
+  font-size: 12px;
+  font-weight: 800;
+  color: #232b47;
+  text-align: right;
+}
+
+.photo-concl {
+  margin-top: 8px;
+  border: 1px solid #dfe5ec;
+  border-radius: 12px;
+  background: #f8fafc;
+  padding: 14px;
+}
+
+.photo-concl > p {
+  margin: 0 0 10px;
+  font-size: 11px;
+  line-height: 1.6;
+  color: #5b6a7d;
+}
+
+.photo-concl-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.photo-concl-chips button {
+  min-height: 38px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1.5px solid #d7dee6;
+  background: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  color: #435062;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, transform 0.1s;
+}
+
+.photo-concl-chips button:hover {
+  border-color: #f97316;
+}
+
+.photo-concl-chips button:active {
+  transform: scale(0.97);
+}
+
+.photo-concl-chips button.on {
+  border-color: #f97316;
+  background: #fff2e8;
+  color: #c2571d;
+}
+
+.photo-concl .record-button {
+  width: 100%;
+}
+
+.photo-concl-ok {
+  margin: 12px 0 0;
+  padding: 10px 12px;
+  border-radius: 9px;
+  background: #eaf5e6;
+  border: 1px solid #bcdcb0;
+  color: #2c5a24;
+  font-size: 10.5px;
+  line-height: 1.6;
+}
+
+.photo-concl-bad {
+  margin: 12px 0 0;
+  padding: 10px 12px;
+  border-radius: 9px;
+  background: #fdf3e7;
+  border: 1px solid #f0d3ad;
+  color: #8a5a13;
+  font-size: 10.5px;
+  line-height: 1.6;
+}
+
+/* ---- responsive --------------------------------------------------------------- */
+@media (max-width: 720px) {
+  .photo-controls {
+    grid-template-columns: 1fr;
+  }
+
+  .photo-clock > strong {
+    font-size: 22px;
+  }
+
+  .photo-bar-row {
+    grid-template-columns: minmax(84px, 118px) 1fr 38px;
+    gap: 8px;
+  }
+
+  .photo-inv-chip {
+    font-size: 10px;
+    padding: 6px 10px;
+  }
+}

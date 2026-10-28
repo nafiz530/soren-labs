@@ -452,18 +452,184 @@ const chemistry: LabMeta[] = [
 
 
 const biology: LabMeta[] = [
-  { slug: 'virtual-microscope', docsSlug: 'virtual-microscope-lab-onion-cheek-cells', title: 'Virtual microscope', subject: 'Biology', tier: 'Explorer', tagline: 'Turn real focus knobs and examine onion and cheek cell slides.', status: 'roadmap', experimentNo: 28, seo: { title: 'Virtual Microscope Lab', description: 'Focus and examine cell slides.', keywords: ['virtual microscope lab'] } },
-  { slug: 'build-a-cell', docsSlug: 'plant-and-animal-cell-virtual-lab', title: 'Build-a-cell', subject: 'Biology', tier: 'Explorer', tagline: 'Drag organelles into place and label plant and animal cells.', status: 'roadmap', experimentNo: 29, seo: { title: 'Cell Structure Virtual Lab', description: 'Assemble and label cells.', keywords: ['cell virtual lab'] } },
-  { slug: 'photosynthesis-starch-test', docsSlug: 'photosynthesis-starch-test-virtual-lab', title: 'Photosynthesis: starch test', subject: 'Biology', tier: 'Builder', tagline: 'Iodine on a variegated leaf reveals exactly where light made starch.', status: 'roadmap', experimentNo: 30, seo: { title: 'Photosynthesis Virtual Lab', description: 'Test leaves for starch.', keywords: ['photosynthesis virtual lab'] } },
-  { slug: 'transpiration-potometer', docsSlug: 'transpiration-potometer-virtual-lab', title: 'Transpiration', subject: 'Biology', tier: 'Master', tagline: 'Race a potometer bubble under fan, mist and still air.', status: 'roadmap', experimentNo: 31, seo: { title: 'Transpiration Virtual Lab', description: 'Measure water loss in plants.', keywords: ['transpiration virtual lab'] } },
-  { slug: 'seed-germination', docsSlug: 'seed-germination-virtual-lab', title: 'Seed germination', subject: 'Biology', tier: 'Explorer', tagline: 'Toggle water, air and warmth and time-lapse the sprouting.', status: 'roadmap', experimentNo: 32, seo: { title: 'Germination Virtual Lab', description: 'Find what seeds need to grow.', keywords: ['germination virtual lab'] } },
-  { slug: 'osmosis-potato', docsSlug: 'osmosis-in-potato-cells-virtual-lab', title: 'Osmosis in potato', subject: 'Biology', tier: 'Builder', tagline: 'Bathe potato cylinders in salt solutions and weigh turgid against flaccid.', status: 'roadmap', experimentNo: 33, seo: { title: 'Osmosis Virtual Lab', description: 'Osmosis in potato tissue.', keywords: ['osmosis virtual lab'] } },
-  { slug: 'food-tests', docsSlug: 'food-test-virtual-lab-benedicts-iodine', title: 'Food test kitchen', subject: 'Biology', tier: 'Builder', tagline: 'Benedict\u2019s, iodine, biuret and emulsion tests on real food samples.', status: 'roadmap', experimentNo: 34, seo: { title: 'Food Tests Virtual Lab', description: 'Test foods for nutrients.', keywords: ['food test virtual lab'] } },
-  { slug: 'respiration-in-seeds', docsSlug: 'respiration-in-germinating-seeds-virtual-lab', title: 'Respiration in seeds', subject: 'Biology', tier: 'Builder', tagline: 'Germinating versus boiled seeds — which one breathes out CO\u2082?', status: 'roadmap', experimentNo: 35, seo: { title: 'Respiration Virtual Lab', description: 'CO2 from germinating seeds.', keywords: ['respiration virtual lab'] } },
-  { slug: 'dna-model', docsSlug: 'dna-structure-and-replication-virtual-lab', title: 'DNA double helix', subject: 'Biology', tier: 'Master', tagline: 'Assemble nucleotides with base-pairing rules, then unzip and replicate.', status: 'roadmap', experimentNo: 36, seo: { title: 'DNA Virtual Lab', description: 'Build and replicate DNA.', keywords: ['dna virtual lab'] } },
-  { slug: 'heart-blood-flow', docsSlug: 'heart-structure-and-blood-flow-virtual-lab', title: 'Journey of blood', subject: 'Biology', tier: 'Builder', tagline: 'Trace blood through four chambers and valves, with heart sounds.', status: 'roadmap', experimentNo: 37, seo: { title: 'Heart Virtual Lab', description: 'Follow blood through the heart.', keywords: ['heart virtual lab'] } },
-  { slug: 'digestion-journey', docsSlug: 'digestive-system-virtual-lab', title: 'Digestion journey', subject: 'Biology', tier: 'Builder', tagline: 'Follow food from mouth to intestine, adding enzymes along the way.', status: 'roadmap', experimentNo: 38, seo: { title: 'Digestion Virtual Lab', description: 'Travel the digestive system.', keywords: ['digestion virtual lab'] } },
+  {
+    slug: 'virtual-microscope',
+    docsSlug: 'virtual-microscope-lab-onion-cheek-cells',
+    title: 'Virtual microscope',
+    subject: 'Biology',
+    tier: 'Explorer',
+    tagline: 'Turn real focus knobs and examine onion and cheek cell slides.',
+    status: 'live',
+    experimentNo: 28,
+    seo: {
+      title: 'Virtual Microscope Lab \u2014 Onion and Cheek Cells Under the Microscope',
+      description:
+        'Drag slides onto the stage, rotate the objective turret and turn real coarse and fine focus knobs until onion epidermis and human cheek cells snap into view. Measure cells with an eyepiece graticule and compare plant against animal cells. Free interactive microscope simulator.',
+      keywords: ['virtual microscope lab', 'onion cells under microscope', 'cheek cell experiment online', 'plant vs animal cell comparison', 'how to focus a microscope'],
+    },
+  },
+  {
+    slug: 'build-a-cell',
+    docsSlug: 'plant-and-animal-cell-virtual-lab',
+    title: 'Build-a-cell',
+    subject: 'Biology',
+    tier: 'Explorer',
+    tagline: 'Drag organelles into place and label plant and animal cells.',
+    status: 'live',
+    experimentNo: 29,
+    seo: {
+      title: 'Plant and Animal Cell Virtual Lab \u2014 Build and Label Organelles',
+      description:
+        'Drag nuclei, mitochondria, chloroplasts and vacuoles into a plant cell and an animal cell, label every organelle and pass the function quiz. Interactive drag-and-drop cell structure simulator teaching the differences between plant and animal cells.',
+      keywords: ['plant and animal cell virtual lab', 'cell organelles interactive', 'drag and drop cell structure', 'differences between plant and animal cells', 'cell labeled diagram online'],
+    },
+  },
+  {
+    slug: 'photosynthesis-starch-test',
+    docsSlug: 'photosynthesis-starch-test-virtual-lab',
+    title: 'Photosynthesis: starch test',
+    subject: 'Biology',
+    tier: 'Builder',
+    tagline: 'Iodine on a variegated leaf reveals exactly where light made starch.',
+    status: 'live',
+    experimentNo: 30,
+    seo: {
+      title: 'Photosynthesis Virtual Lab \u2014 Starch Test in Leaves with Iodine',
+      description:
+        'Kill a leaf in boiling water, decolorize it in ethanol over a water bath, rinse it flat and drop iodine where light made starch. Test variegated leaves from the windowsill against destarched leaves from the dark cupboard. Interactive photosynthesis experiment.',
+      keywords: ['photosynthesis virtual lab', 'starch test in leaves', 'iodine test for starch', 'variegated leaf experiment', 'destarched plant'],
+    },
+  },
+  {
+    slug: 'transpiration-potometer',
+    docsSlug: 'transpiration-potometer-virtual-lab',
+    title: 'Transpiration',
+    subject: 'Biology',
+    tier: 'Master',
+    tagline: 'Race a potometer bubble under fan, mist and still air.',
+    status: 'live',
+    experimentNo: 31,
+    seo: {
+      title: 'Transpiration Virtual Lab \u2014 Bubble Potometer Experiment Online',
+      description:
+        'Cut a shoot under water, seal the potometer, charge the bubble to zero and race it under still air, a strong fan, mist, darkness and warmth. Record rates and discover what increases the rate of transpiration. Interactive potometer simulator.',
+      keywords: ['transpiration virtual lab', 'potometer experiment online', 'rate of transpiration simulation', 'factors affecting transpiration', 'bubble potometer interactive'],
+    },
+  },
+  {
+    slug: 'seed-germination',
+    docsSlug: 'seed-germination-virtual-lab',
+    title: 'Seed germination',
+    subject: 'Biology',
+    tier: 'Explorer',
+    tagline: 'Toggle water, air and warmth and time-lapse the sprouting.',
+    status: 'live',
+    experimentNo: 32,
+    seo: {
+      title: 'Seed Germination Virtual Lab \u2014 What Seeds Need to Germinate',
+      description:
+        'Set up six dishes of seeds with different water, air, warmth and light conditions, fast-forward the days and watch seeds swell, split and push out radicle and plumule. Dissect a seed and bust the light myth. Interactive germination experiment.',
+      keywords: ['seed germination virtual lab', 'germination experiment online', 'what seeds need to germinate', 'radicle and plumule', 'seed structure dissection'],
+    },
+  },
+  {
+    slug: 'osmosis-potato',
+    docsSlug: 'osmosis-in-potato-cells-virtual-lab',
+    title: 'Osmosis in potato',
+    subject: 'Biology',
+    tier: 'Builder',
+    tagline: 'Bathe potato cylinders in salt solutions and weigh turgid against flaccid.',
+    status: 'live',
+    experimentNo: 33,
+    seo: {
+      title: 'Osmosis Virtual Lab \u2014 Potato Cylinders in Salt Solutions',
+      description:
+        'Bore six potato cylinders, weigh them, bathe them in solutions from distilled water to 1.0 M salt and reweigh to plot mass change against concentration. Find the isotonic point and meet turgid and flaccid cells through a magnifier. Interactive osmosis simulator.',
+      keywords: ['osmosis virtual lab', 'potato osmosis experiment', 'isotonic point potato', 'turgid and flaccid cells', 'water potential simulation'],
+    },
+  },
+  {
+    slug: 'food-tests',
+    docsSlug: 'food-test-virtual-lab-benedicts-iodine',
+    title: 'Food test kitchen',
+    subject: 'Biology',
+    tier: 'Builder',
+    tagline: 'Benedict\u2019s, iodine, biuret and emulsion tests on real food samples.',
+    status: 'live',
+    experimentNo: 34,
+    seo: {
+      title: 'Food Test Virtual Lab \u2014 Benedict\u2019s Iodine Biuret and Emulsion Tests',
+      description:
+        'Run Benedict\u2019s reagent over a hot water bath, iodine, biuret and the ethanol emulsion test on potato, glucose, egg white, oil and a mystery food. Identify starch, reducing sugar, protein and fat from the colours you actually see. Interactive food test kitchen.',
+      keywords: ['food test virtual lab', 'benedicts test for sugar', 'iodine test for starch', 'biuret test for protein', 'emulsion test for fats'],
+    },
+  },
+  {
+    slug: 'respiration-in-seeds',
+    docsSlug: 'respiration-in-germinating-seeds-virtual-lab',
+    title: 'Respiration in seeds',
+    subject: 'Biology',
+    tier: 'Builder',
+    tagline: 'Germinating versus boiled seeds \u2014 which one breathes out CO\u2082?',
+    status: 'live',
+    experimentNo: 35,
+    seo: {
+      title: 'Respiration Virtual Lab \u2014 Germinating Seeds and CO\u2082 Production',
+      description:
+        'Boil one flask of seeds as the control, keep another germinating, pump the same air through both and watch lime water cloud only where living seeds respire. Thermometers reveal the small heat release too. Interactive respiration experiment online.',
+      keywords: ['respiration virtual lab', 'germinating seeds co2 experiment', 'limewater test for carbon dioxide', 'do seeds respire', 'boiled seeds control'],
+    },
+  },
+  {
+    slug: 'dna-model',
+    docsSlug: 'dna-structure-and-replication-virtual-lab',
+    title: 'DNA double helix',
+    subject: 'Biology',
+    tier: 'Master',
+    tagline: 'Assemble nucleotides with base-pairing rules, then unzip and replicate.',
+    status: 'live',
+    experimentNo: 36,
+    seo: {
+      title: 'DNA Virtual Lab \u2014 Build a Double Helix and Watch It Replicate',
+      description:
+        'Drag complementary nucleotides up a twisting ladder, honour the A-T and G-C base-pairing rules with honest hydrogen-bond counts, then unzip the helix and fill both templates to see semi-conservative replication. Interactive DNA structure and replication simulator.',
+      keywords: ['dna virtual lab', 'dna structure interactive', 'base pairing rules simulation', 'dna replication animation', 'semi conservative replication', 'chargaffs rule'],
+    },
+  },
+  {
+    slug: 'heart-blood-flow',
+    docsSlug: 'heart-structure-and-blood-flow-virtual-lab',
+    title: 'Journey of blood',
+    subject: 'Biology',
+    tier: 'Builder',
+    tagline: 'Trace blood through four chambers and valves, with heart sounds.',
+    status: 'live',
+    experimentNo: 37,
+    seo: {
+      title: 'Heart Virtual Lab \u2014 Blood Flow Through the Heart Interactive',
+      description:
+        'Follow blood particles from the vena cava through four chambers, valves and the lungs loop back out through the aorta, with lub-dub heart sounds and a beating cross-section heart. Label every structure and trace the double circulation. Interactive heart simulator.',
+      keywords: ['heart virtual lab', 'blood flow through the heart interactive', 'heart structure labeled', 'double circulation simulation', 'left ventricle wall thickness'],
+    },
+  },
+  {
+    slug: 'digestion-journey',
+    docsSlug: 'digestive-system-virtual-lab',
+    title: 'Digestion journey',
+    subject: 'Biology',
+    tier: 'Builder',
+    tagline: 'Follow food from mouth to intestine, adding enzymes along the way.',
+    status: 'live',
+    experimentNo: 38,
+    seo: {
+      title: 'Digestive System Virtual Lab \u2014 Enzymes Bile and Absorption Journey',
+      description:
+        'Chew a sandwich with salivary amylase, ride peristalsis into a churning acid stomach, emulsify fat with bile and finish digestion in the small intestine with villi absorbing the pieces. Interactive digestion simulator with honest enzyme specificity and pH.',
+      keywords: ['digestive system virtual lab', 'digestion simulation interactive', 'enzymes in digestion', 'peristalsis animation', 'bile emulsification of fats', 'villi absorption'],
+    },
+  },
 ];
+
 
 const integrated: LabMeta[] = [
   { slug: 'states-of-matter', docsSlug: 'states-of-matter-particle-virtual-lab', title: 'States of matter machine', subject: 'Integrated Science', tier: 'Explorer', tagline: 'Heat and cool a particle box until solid, liquid and gas reveal themselves.', status: 'roadmap', experimentNo: 39, seo: { title: 'States of Matter Virtual Lab', description: 'Particle model of states.', keywords: ['states of matter virtual lab'] } },

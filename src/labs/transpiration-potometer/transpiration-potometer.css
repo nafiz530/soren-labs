@@ -1,0 +1,221 @@
+/* Transpiration potometer lab — small custom styles.
+   Shared layout, buttons and cards come from engine.css; everything here is
+   prefixed .trans- and tuned for ~980 px desktops down to narrow phones. */
+
+.trans-layout {
+  display: grid;
+  grid-template-columns: minmax(280px, 1fr) minmax(260px, 1fr);
+  gap: 14px;
+  align-items: start;
+}
+
+.trans-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* The tempting dry-cut variant of the main action button. */
+.trans-actions .action-button.ghost {
+  background: #f4f6f8;
+  border: 1.5px dashed #c3cdd7;
+}
+
+.trans-actions .action-button.ghost .dispense-icon {
+  background: #eef2f6;
+  color: #5d6a79;
+}
+
+/* Condition controls: selects + toggles. */
+.trans-conditions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 10px 12px;
+  padding: 12px;
+  border: 1px solid #dfe6ec;
+  border-radius: 12px;
+  background: #f7f9fb;
+}
+
+.trans-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #5d6a79;
+  letter-spacing: 0.02em;
+}
+
+.trans-field select {
+  min-height: 38px;
+  padding: 6px 10px;
+  border-radius: 9px;
+  border: 1.5px solid #c9d3dc;
+  background: #fff;
+  color: #172334;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.trans-field select:focus-visible,
+.trans-toggle:focus-visible {
+  outline: 2px solid #f97316;
+  outline-offset: 2px;
+}
+
+.trans-toggles {
+  display: flex;
+  gap: 10px;
+  grid-column: 1 / -1;
+  flex-wrap: wrap;
+}
+
+.trans-toggle {
+  flex: 1 1 130px;
+  min-height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1.5px solid #c9d3dc;
+  background: #fff;
+  color: #172334;
+  font: inherit;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, transform 0.08s ease;
+  touch-action: manipulation;
+}
+
+.trans-toggle:active {
+  transform: scale(0.98);
+}
+
+.trans-toggle.on {
+  border-color: #f97316;
+  background: #fff3e9;
+  color: #b34a10;
+}
+
+.trans-toggle.on[aria-pressed="true"] {
+  box-shadow: inset 0 0 0 1px #f97316;
+}
+
+/* Multi-run travel chart (SVG inside the observations tab). */
+.trans-chart {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid #dfe6ec;
+  border-radius: 10px;
+  background: #fff;
+}
+
+.trans-chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  margin-top: 8px;
+  font-size: 11.5px;
+  color: #5d6a79;
+}
+
+.trans-chart-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.trans-chart-legend i {
+  width: 14px;
+  height: 3px;
+  border-radius: 2px;
+  display: inline-block;
+}
+
+.trans-chart-legend .live {
+  font-weight: 700;
+  color: #e8632a;
+}
+
+/* Conclusion card in the observations tab. */
+.trans-conclusion {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.trans-check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 42px;
+  padding: 8px 12px;
+  border: 1.5px solid #d5dee6;
+  border-radius: 10px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #172334;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.trans-check input {
+  width: 18px;
+  height: 18px;
+  accent-color: #f97316;
+  flex: none;
+}
+
+.trans-check.on {
+  border-color: #f97316;
+  background: #fff3e9;
+}
+
+.trans-conclusion .action-button {
+  align-self: flex-start;
+  margin-top: 4px;
+}
+
+.trans-conclusion-ok {
+  margin: 4px 0 0;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: #e9f7ef;
+  border: 1px solid #b7e0c3;
+  color: #1d6b3a;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+/* Desktop-ish and below. */
+@media (max-width: 980px) {
+  .trans-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Phones: keep every touch target comfortably large. */
+@media (max-width: 560px) {
+  .trans-conditions {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .trans-toggle {
+    flex-basis: 100%;
+  }
+
+  .trans-chart-legend {
+    font-size: 11px;
+  }
+}

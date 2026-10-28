@@ -2,7 +2,7 @@
 
 Interactive virtual science laboratories — built for learning by doing. Students hold real instruments in the browser: stopcocks, pendulums, springs, circuits and optics benches, with a lab mentor that watches their hands and steps in when they stall.
 
-**Live catalog:** 27 experiments (Chemistry 14 + Physics 13) out of 51 planned, each with a keyword-rich guide page for search at `/docs/{lab-name}`.
+**Live catalog:** 38 experiments (Chemistry 14 + Physics 13 + Biology 11) out of 51 planned, each with a keyword-rich guide page for search at `/docs/{lab-name}`.
 
 ## Stack
 
@@ -50,7 +50,7 @@ Every lab inherits sound, mentor, nudge guidance, responsive layout and SEO auto
 - Lab mentor with self-completing guided steps and contextual coaching
 - Smart guidance: if the student clicks wrongly or goes idle, an animated hand demonstrates the exact next gesture on the exact control
 - Real measurements: data tables, live plots, least-squares analysis, badges
-- Honest physics and chemistry: Maxwell-Boltzmann molecular dynamics, Faraday-law plating, Newton cooling, limiting reagents, hydrate stoichiometry
+- Honest physics, chemistry and biology: Maxwell-Boltzmann molecular dynamics, Faraday-law plating, Newton cooling, limiting reagents, hydrate stoichiometry, osmosis water-potential kinetics, base-pairing rules and semi-conservative replication
 - Zoom (wheel/pinch/buttons) and orbit camera on the 3D titration scene
 - Synthesized sound with mute + volume, haptics on mobile
 - Per-lab SEO guide pages, JSON-LD, Open Graph, sitemap and robots.txt
