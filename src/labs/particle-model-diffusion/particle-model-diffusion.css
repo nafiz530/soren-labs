@@ -1,0 +1,60 @@
+/* Particles & diffusion lab specific styles (everything shared lives in engine.css). */
+
+.diff-layout{display:grid;grid-template-columns:minmax(0,1.04fr) minmax(0,1fr);gap:16px;margin-top:2px}
+.diff-conds{display:flex;flex-direction:column;gap:10px;min-width:0}
+
+.diff-seg-label{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.diff-seg-label span{font-size:10.5px;font-weight:700;color:#5b6a7d}
+.diff-seg-label strong{font-family:Manrope,sans-serif;font-size:13px;font-weight:800;color:#172334}
+.diff-seg-row{display:grid;gap:7px}
+.diff-seg-row.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+.diff-seg-row.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.diff-seg-btn{
+  min-height:38px;padding:8px 2px;border:1px solid #d9e0e8;border-radius:9px;background:#fff;
+  font-size:11px;font-weight:800;color:#5b6a7d;transition:border-color .15s,background .15s,color .15s;
+}
+.diff-seg-btn:hover:not(:disabled){border-color:var(--lab-accent);color:#172334}
+.diff-seg-btn.active{border-color:#f0c9a8;background:#fff8f2;color:#b3431f;box-shadow:0 2px 8px #f973161a}
+.diff-seg-btn:disabled{opacity:.5;cursor:not-allowed}
+.diff-seg-btn.trails{width:100%;min-height:40px}
+
+.diff-note{margin:2px 0 0;font-size:9px;line-height:1.55;color:#8b97a5}
+.diff-lock{margin:0;padding:8px 11px;border-radius:8px;background:#fdf6ec;border:1px solid #f3e2c4;font-size:9.5px;line-height:1.5;color:#8a5a13}
+
+.diff-actions{display:flex;flex-direction:column;gap:10px;min-width:0}
+.diff-reset{align-self:flex-start}
+
+.diff-clock{display:flex;flex-direction:column;gap:5px;padding:12px 14px;border:1px solid var(--lab-line);border-radius:10px;background:var(--lab-soft)}
+.diff-clock>span{font-size:8.5px;font-weight:800;letter-spacing:1.1px;color:#8b97a5}
+.diff-clock>strong{font-family:Manrope,sans-serif;font-size:26px;font-weight:800;letter-spacing:-1px;color:#172334}
+.diff-clock>strong.running{color:#e8632a}
+.diff-clock-track{height:6px;border-radius:5px;background:#e3e8ef;overflow:hidden}
+.diff-clock-track span{display:block;height:100%;border-radius:5px;background:linear-gradient(90deg,#f9a46a,#f97316);transition:width .25s}
+.diff-clock-scale{display:flex;justify-content:space-between;font-size:9px;font-weight:700;color:#9aa4b1}
+
+/* probe readout in the sidebar instrument card */
+.diff-probe{margin-top:12px;padding:13px 15px;border-radius:9px;background:var(--lab-soft);border:1px solid var(--lab-line)}
+.diff-probe>span{font-size:8.5px;font-weight:800;letter-spacing:1.1px;color:#8b97a5}
+.diff-probe>strong{display:block;margin-top:4px;font-family:Manrope,sans-serif;font-size:27px;font-weight:800;letter-spacing:-1px;color:#172334}
+.diff-probe>strong small{font-size:12px;color:#8793a1;letter-spacing:0}
+.diff-probe>strong .diff-probe-out{font-size:12px;font-weight:700;color:#9aa4b1;letter-spacing:0}
+.diff-probe>p{margin:7px 0 0;font-size:9px;line-height:1.6;color:#8b97a5}
+
+/* chips under the sidebar chart */
+.diff-chart-legend{display:flex;flex-wrap:wrap;gap:9px;margin-top:8px;font-size:9px;font-weight:700;color:#5b6a7d}
+.diff-chart-legend span{display:inline-flex;align-items:center;gap:5px}
+.diff-chart-legend i{width:11px;height:11px;border-radius:3px;border:1px solid #c9d2db}
+
+/* local hint-row duplicate (engine.css ships none — each lab brings its own) */
+.hint-row{display:flex;gap:8px;align-items:center;color:#8b97a5;font-size:9.5px;line-height:1.6}
+.hint-row span{color:var(--lab-accent);font-weight:800}
+
+@media(max-width:980px){
+  .diff-layout{grid-template-columns:1fr}
+}
+@media(max-width:740px){
+  .diff-seg-btn{min-height:40px;font-size:10.5px}
+  .diff-seg-row.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .diff-clock>strong{font-size:22px}
+  .diff-probe>strong{font-size:23px}
+}

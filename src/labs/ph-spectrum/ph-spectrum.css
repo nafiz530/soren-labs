@@ -1,0 +1,41 @@
+/* pH-spectrum-lab-specific styles (everything shared lives in engine.css). */
+
+.ph-layout{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:2px}
+.ph-actions{display:flex;flex-direction:column;gap:10px}
+
+.ph-progress{display:flex;flex-direction:column;gap:11px;padding:12px 14px;border:1px solid var(--lab-line);border-radius:10px;background:#f7f9fb}
+.ph-progress-row label{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:5px}
+.ph-progress-row span{font-size:10px;font-weight:700;color:#5b6a7d}
+.ph-progress-row strong{font-family:Manrope,sans-serif;font-size:12.5px;font-weight:800;color:#172334}
+.ph-bar{height:6px;border-radius:5px;background:#e3e8ef;overflow:hidden}
+.ph-bar span{display:block;height:100%;border-radius:5px;background:linear-gradient(90deg,#f9a46a,#f97316);transition:width .25s}
+
+/* the DOM mirror of the canvas scale strip: 7 colour bands with tube counts */
+.ph-scale-map{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;margin-top:14px}
+.ph-slot-chip{display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 3px 7px;border:1px solid var(--lab-line);border-radius:9px;background:#fff;text-align:center}
+.ph-slot-chip i{width:86%;height:9px;border-radius:4px;border:1px solid #c9d2db}
+.ph-slot-chip span{font-size:9.5px;font-weight:800;color:#172334}
+.ph-slot-chip small{font-size:8px;font-weight:600;color:#8b97a5}
+.ph-slot-chip b{font-size:10px;letter-spacing:2px;color:#5b6a7d;min-height:12px;line-height:12px}
+
+/* colour swatch used in the observations table and reading grid */
+.ph-dot{display:inline-block;width:10px;height:10px;border-radius:3px;border:1px solid #c9d2db;vertical-align:-1px;margin-right:5px}
+.ph-quiet{font-size:13px;font-weight:600;color:#8b97a5;letter-spacing:0}
+.reading-main.ph-measuring strong{color:#e8632a}
+.ph-probe-note{margin:10px 0 0;font-size:9.5px;line-height:1.6;color:#8b97a5}
+
+@media(max-width:980px){
+  .ph-layout{grid-template-columns:1fr}
+}
+@media(max-width:740px){
+  .ph-actions{flex-direction:row}
+  .ph-actions .action-button{flex:1}
+  .ph-scale-map{gap:4px}
+  .ph-slot-chip{padding:7px 2px 6px}
+  .ph-slot-chip span{font-size:8.5px}
+  .ph-slot-chip small{font-size:7.5px}
+  .ph-slot-chip b{letter-spacing:1px}
+}
+@media(max-width:480px){
+  .ph-scale-map{grid-template-columns:repeat(4,minmax(0,1fr))}
+}

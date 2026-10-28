@@ -1,0 +1,53 @@
+/* Exothermic vs endothermic lab — custom styles (everything shared lives in engine.css). */
+
+.thermo-layout{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(250px,.85fr);gap:16px;margin-top:2px}
+
+/* local hint-row duplicate (engine.css ships none — each lab brings its own) */
+.hint-row{display:flex;gap:8px;align-items:center;margin-top:14px;color:#8b97a5;font-size:9.5px;line-height:1.6}
+.hint-row span{color:var(--lab-accent);font-weight:800}
+
+/* reagent shelf legend — chips that highlight the matching jar */
+.thermo-shelf{padding:12px 14px;border:1px solid var(--lab-line);border-radius:10px;background:#f7f9fb}
+.thermo-shelf-kicker{display:block;font-size:9px;font-weight:800;letter-spacing:1px;color:#8b97a5;margin-bottom:9px}
+.thermo-chips{display:flex;flex-wrap:wrap;gap:7px}
+.thermo-chip{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:9px 12px;border:1px solid #d9e0e8;border-radius:9px;background:#fff;
+  font-size:10.5px;font-weight:700;color:#4a5769;
+  transition:border-color .15s,background .15s,transform .1s;
+}
+.thermo-chip i{width:11px;height:11px;border-radius:4px;border:1px solid #c9d2db;flex:none}
+.thermo-chip:hover,.thermo-chip:focus-visible,.thermo-chip.hot{border-color:#f0c9a8;background:#fff8f2;transform:translateY(-1px)}
+.thermo-chip:focus-visible{outline:3px solid #93b4ff;outline-offset:2px}
+.thermo-shelf>small{display:block;margin-top:9px;font-size:9px;line-height:1.55;color:#8b97a5}
+
+/* pour assist + stirrer */
+.thermo-actions{display:flex;flex-direction:column;gap:12px}
+.thermo-assist,.thermo-stir{padding:12px 14px;border:1px solid var(--lab-line);border-radius:10px;background:#f7f9fb;display:flex;flex-direction:column;gap:8px}
+.thermo-assist label,.thermo-stir label{display:flex;flex-direction:column;gap:6px;font-size:9px;font-weight:800;letter-spacing:.8px;color:#8b97a5}
+.thermo-assist select,.thermo-stir select{padding:10px 10px;border:1px solid #d9e0e8;border-radius:8px;background:#fff;font:inherit;font-size:11.5px;font-weight:700;color:#172334}
+.thermo-assist small,.thermo-stir small{font-size:9px;color:#8b97a5;line-height:1.5}
+
+/* discard-run button under the record button */
+.thermo-fresh{display:block;margin:10px auto 0}
+
+/* sidebar chart caption */
+.thermo-chart-cap{display:flex;justify-content:space-between;gap:8px;margin-top:7px;font-size:8.5px;font-weight:700;letter-spacing:.5px;color:#8b97a5}
+
+/* observations table — classification dropdown + direction colouring */
+.thermo-table select{padding:6px 8px;border:1px solid #d9e0e8;border-radius:7px;background:#fff;font:inherit;font-size:10px;font-weight:700;color:#172334;max-width:120px}
+.thermo-table .thermo-up{color:#b3431f}
+.thermo-table .thermo-down{color:#2f6fa8}
+.thermo-ok{color:#1e8e4e;font-weight:800}
+.thermo-dot{display:inline-block;width:10px;height:10px;border-radius:3px;border:1px solid #c9d2db;vertical-align:-1px;margin-right:5px}
+
+@media(max-width:980px){
+  .thermo-layout{grid-template-columns:minmax(0,1fr)}
+}
+@media(max-width:740px){
+  .thermo-chip{padding:8px 10px;font-size:10px}
+  .thermo-assist select,.thermo-stir select{font-size:11px}
+}
+@media(max-width:540px){
+  .thermo-chips{gap:6px}
+}

@@ -24,6 +24,19 @@ const LAB_COMPONENTS: Record<string, React.LazyExoticComponent<React.ComponentTy
   'magnetic-field-mapping': lazy(() => import('./labs/magnetic-field-mapping/MagneticFieldLab')),
   'electromagnetic-induction': lazy(() => import('./labs/electromagnetic-induction/InductionLab')),
   'diode-rectifier': lazy(() => import('./labs/diode-rectifier/DiodeLab')),
+  'ph-spectrum': lazy(() => import('./labs/ph-spectrum/PhSpectrumLab')),
+  'reactivity-series': lazy(() => import('./labs/reactivity-series/ReactivitySeriesLab')),
+  'electrolysis-of-water': lazy(() => import('./labs/electrolysis-of-water/ElectrolysisLab')),
+  'separation-methods': lazy(() => import('./labs/separation-methods/SeparationLab')),
+  'ink-chromatography': lazy(() => import('./labs/ink-chromatography/ChromatographyLab')),
+  'co2-preparation-tests': lazy(() => import('./labs/co2-preparation-tests/Co2Lab')),
+  'ion-identification': lazy(() => import('./labs/ion-identification/IonDetectiveLab')),
+  'rusting-conditions': lazy(() => import('./labs/rusting-conditions/RustingLab')),
+  'exothermic-endothermic': lazy(() => import('./labs/exothermic-endothermic/ThermoLab')),
+  'reaction-rate': lazy(() => import('./labs/reaction-rate/ReactionRateLab')),
+  'copper-plating': lazy(() => import('./labs/copper-plating/CopperPlatingLab')),
+  'water-of-crystallization': lazy(() => import('./labs/water-of-crystallization/CrystallizationLab')),
+  'particle-model-diffusion': lazy(() => import('./labs/particle-model-diffusion/DiffusionLab')),
 };
 
 export default function App() {

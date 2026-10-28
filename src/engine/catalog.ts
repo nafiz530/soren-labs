@@ -240,20 +240,216 @@ const physics: LabMeta[] = [
 ];
 
 const chemistry: LabMeta[] = [
-  { slug: 'ph-spectrum', docsSlug: 'ph-scale-indicator-virtual-lab', title: 'pH spectrum', subject: 'Chemistry', tier: 'Explorer', tagline: 'Test household solutions with universal indicator and build the full pH scale with your own hands.', status: 'roadmap', experimentNo: 15, seo: { title: 'pH Scale Virtual Lab', description: 'Test solutions with indicators and build the pH scale interactively.', keywords: ['ph virtual lab', 'indicator simulation'] } },
-  { slug: 'reactivity-series', docsSlug: 'reactivity-series-of-metals-virtual-lab', title: 'Reactivity series', subject: 'Chemistry', tier: 'Builder', tagline: 'Drop metals into acid, rank the fizzing and discover the activity order of metals.', status: 'roadmap', experimentNo: 16, seo: { title: 'Reactivity Series Virtual Lab', description: 'Compare metal reactivity with acid in an interactive bench.', keywords: ['reactivity series virtual lab'] } },
-  { slug: 'electrolysis-of-water', docsSlug: 'electrolysis-of-water-virtual-lab', title: 'Electrolysis of water', subject: 'Chemistry', tier: 'Master', tagline: 'Split water into hydrogen and oxygen and test each gas with a flame.', status: 'roadmap', experimentNo: 17, seo: { title: 'Electrolysis of Water Virtual Lab', description: 'Electrolyse water and test the product gases.', keywords: ['electrolysis virtual lab'] } },
-  { slug: 'separation-methods', docsSlug: 'separation-of-mixtures-virtual-lab', title: 'Separation bench', subject: 'Chemistry', tier: 'Explorer', tagline: 'Filter, evaporate, distil and sublime your way through one mixture sandbox.', status: 'roadmap', experimentNo: 18, seo: { title: 'Separation of Mixtures Virtual Lab', description: 'Practise filtration, distillation and more.', keywords: ['separation techniques virtual lab'] } },
-  { slug: 'ink-chromatography', docsSlug: 'ink-chromatography-virtual-lab', title: 'Ink chromatography', subject: 'Chemistry', tier: 'Builder', tagline: 'Race pigments up paper strips and calculate Rf values like a forensic chemist.', status: 'roadmap', experimentNo: 19, seo: { title: 'Chromatography Virtual Lab', description: 'Separate ink pigments and compute Rf values.', keywords: ['chromatography virtual lab'] } },
-  { slug: 'co2-preparation-tests', docsSlug: 'carbon-dioxide-preparation-and-tests-virtual-lab', title: 'Make & test CO\u2082', subject: 'Chemistry', tier: 'Builder', tagline: 'Cook up carbon dioxide from marble and acid, then prove it with lime water.', status: 'roadmap', experimentNo: 20, seo: { title: 'CO2 Preparation Virtual Lab', description: 'Prepare and test carbon dioxide.', keywords: ['co2 preparation virtual lab'] } },
-  { slug: 'ion-identification', docsSlug: 'cation-anion-identification-virtual-lab', title: 'Ion detective', subject: 'Chemistry', tier: 'Master', tagline: 'Flame colours and precipitates: identify unknown ions from their reactions.', status: 'roadmap', experimentNo: 21, seo: { title: 'Ion Identification Virtual Lab', description: 'Qualitative analysis with flame tests and wet tests.', keywords: ['qualitative analysis virtual lab'] } },
-  { slug: 'rusting-conditions', docsSlug: 'rusting-of-iron-conditions-virtual-lab', title: 'Rusting conditions', subject: 'Chemistry', tier: 'Explorer', tagline: 'Leave iron nails in air, water and salt water — then watch time decide.', status: 'roadmap', experimentNo: 22, seo: { title: 'Rusting of Iron Virtual Lab', description: 'Discover the conditions iron needs to rust.', keywords: ['rusting virtual lab'] } },
-  { slug: 'exothermic-endothermic', docsSlug: 'exothermic-and-endothermic-reactions-virtual-lab', title: 'Exothermic vs endothermic', subject: 'Chemistry', tier: 'Builder', tagline: 'Dissolve, dilute and neutralise while live thermometers rise and fall.', status: 'roadmap', experimentNo: 23, seo: { title: 'Exothermic Endothermic Virtual Lab', description: 'Feel reactions heat up and cool down.', keywords: ['exothermic virtual lab'] } },
-  { slug: 'reaction-rate', docsSlug: 'rate-of-reaction-virtual-lab', title: 'Rate of reaction', subject: 'Chemistry', tier: 'Master', tagline: 'Vary concentration, temperature and surface area — then race the curves.', status: 'roadmap', experimentNo: 24, seo: { title: 'Rate of Reaction Virtual Lab', description: 'Investigate what speeds reactions up.', keywords: ['rate of reaction virtual lab'] } },
-  { slug: 'copper-plating', docsSlug: 'copper-electroplating-virtual-lab', title: 'Copper plating', subject: 'Chemistry', tier: 'Master', tagline: 'Electroplate an iron nail and watch the pink copper deposit grow.', status: 'roadmap', experimentNo: 25, seo: { title: 'Electroplating Virtual Lab', description: 'Plate copper onto iron interactively.', keywords: ['electroplating virtual lab'] } },
-  { slug: 'water-of-crystallization', docsSlug: 'water-of-crystallisation-copper-sulfate-virtual-lab', title: 'Water of crystallisation', subject: 'Chemistry', tier: 'Master', tagline: 'Bake blue copper sulfate to white dust — then bring the blue back.', status: 'roadmap', experimentNo: 26, seo: { title: 'Water of Crystallisation Virtual Lab', description: 'Heat and rehydrate copper sulfate.', keywords: ['copper sulfate virtual lab'] } },
-  { slug: 'particle-model-diffusion', docsSlug: 'particle-model-and-diffusion-virtual-lab', title: 'Particles & diffusion', subject: 'Chemistry', tier: 'Explorer', tagline: 'Open a divider and watch gases mix themselves, one collision at a time.', status: 'roadmap', experimentNo: 27, seo: { title: 'Diffusion Virtual Lab', description: 'Particle simulation of diffusion.', keywords: ['diffusion virtual lab'] } },
+  {
+    slug: 'ph-spectrum',
+    docsSlug: 'ph-scale-indicator-virtual-lab',
+    title: 'pH spectrum',
+    subject: 'Chemistry',
+    tier: 'Explorer',
+    tagline: 'Test household solutions with universal indicator and build the full pH scale with your own hands.',
+    status: 'live',
+    experimentNo: 15,
+    seo: {
+      title: 'pH Scale Virtual Lab \u2014 Universal Indicator Experiment Online',
+      description:
+        'Test household solutions with universal indicator, read a digital pH probe and place every tube on the 0\u201314 scale yourself. Free interactive pH scale simulator with colour changes, mentor and sound.',
+      keywords: ['ph scale virtual lab', 'universal indicator experiment online', 'ph simulator interactive', 'acid base neutral experiment', 'chemistry indicator colour chart'],
+    },
+  },
+  {
+    slug: 'reactivity-series',
+    docsSlug: 'reactivity-series-of-metals-virtual-lab',
+    title: 'Reactivity series',
+    subject: 'Chemistry',
+    tier: 'Builder',
+    tagline: 'Drop metals into acid, rank the fizzing and discover the activity order of metals.',
+    status: 'live',
+    experimentNo: 16,
+    seo: {
+      title: 'Reactivity Series Virtual Lab \u2014 Metals and Acid Experiment',
+      description:
+        'Drop magnesium, zinc, iron and copper into dilute hydrochloric acid, count the bubbles, read the thermometers and rank the reactivity series yourself. Interactive metal displacement experiment with copper sulfate.',
+      keywords: ['reactivity series virtual lab', 'metals and acids experiment online', 'metal activity simulation', 'displacement reaction simulator', 'magnesium zinc iron copper acid'],
+    },
+  },
+  {
+    slug: 'electrolysis-of-water',
+    docsSlug: 'electrolysis-of-water-virtual-lab',
+    title: 'Electrolysis of water',
+    subject: 'Chemistry',
+    tier: 'Master',
+    tagline: 'Split water into hydrogen and oxygen and test each gas with a flame.',
+    status: 'live',
+    experimentNo: 17,
+    seo: {
+      title: 'Electrolysis of Water Virtual Lab \u2014 Split Water into Hydrogen and Oxygen',
+      description:
+        'Close the switch on a Hofmann voltameter, collect hydrogen and oxygen in a 2:1 ratio and test each gas with burning and glowing splints. Interactive electrolysis simulator with live gas columns.',
+      keywords: ['electrolysis of water virtual lab', 'hofmann voltameter simulation', 'hydrogen oxygen gas test online', 'electrolysis experiment interactive', '2 to 1 gas ratio'],
+    },
+  },
+  {
+    slug: 'separation-methods',
+    docsSlug: 'separation-of-mixtures-virtual-lab',
+    title: 'Separation bench',
+    subject: 'Chemistry',
+    tier: 'Explorer',
+    tagline: 'Filter, evaporate, distil and sublime your way through one mixture sandbox.',
+    status: 'live',
+    experimentNo: 18,
+    seo: {
+      title: 'Separation of Mixtures Virtual Lab \u2014 Filtration Distillation Simulator',
+      description:
+        'Drag real apparatus onto a mixture of sand, iron, salt and ammonium chloride: filter, magnet-separate, evaporate, distil and sublime until every component is recovered. Interactive separation techniques bench.',
+      keywords: ['separation of mixtures virtual lab', 'filtration simulation online', 'distillation virtual experiment', 'sublimation simulator', 'magnet separation iron filings'],
+    },
+  },
+  {
+    slug: 'ink-chromatography',
+    docsSlug: 'ink-chromatography-virtual-lab',
+    title: 'Ink chromatography',
+    subject: 'Chemistry',
+    tier: 'Builder',
+    tagline: 'Race pigments up paper strips and calculate Rf values like a forensic chemist.',
+    status: 'live',
+    experimentNo: 19,
+    seo: {
+      title: 'Ink Chromatography Virtual Lab \u2014 Rf Values Paper Chromatography',
+      description:
+        'Spot inks on paper, lower the strip into solvent, watch pigments race up by capillary action and calculate Rf values to identify an unknown ink. Interactive paper chromatography simulator.',
+      keywords: ['paper chromatography virtual lab', 'rf value calculator experiment', 'ink separation simulation', 'chromatography unknown ink', 'solvent front rising'],
+    },
+  },
+  {
+    slug: 'co2-preparation-tests',
+    docsSlug: 'carbon-dioxide-preparation-and-tests-virtual-lab',
+    title: 'Make & test CO\u2082',
+    subject: 'Chemistry',
+    tier: 'Builder',
+    tagline: 'Cook up carbon dioxide from marble and acid, then prove it with lime water.',
+    status: 'live',
+    experimentNo: 20,
+    seo: {
+      title: 'CO2 Preparation Virtual Lab \u2014 Marble Acid and Gas Tests',
+      description:
+        'Pour dilute hydrochloric acid onto marble chips, collect CO2 by downward displacement of air, snuff a candle with it and turn lime water milky. Interactive carbon dioxide preparation and test bench.',
+      keywords: ['carbon dioxide preparation virtual lab', 'co2 gas tests simulation', 'lime water experiment online', 'marble chips hydrochloric acid', 'candle extinguish co2'],
+    },
+  },
+  {
+    slug: 'ion-identification',
+    docsSlug: 'cation-anion-identification-virtual-lab',
+    title: 'Ion detective',
+    subject: 'Chemistry',
+    tier: 'Master',
+    tagline: 'Flame colours and precipitates: identify unknown ions from their reactions.',
+    status: 'live',
+    experimentNo: 21,
+    seo: {
+      title: 'Ion Identification Virtual Lab \u2014 Flame Tests and Precipitates',
+      description:
+        'Run flame tests, sodium hydroxide precipitates and anion reagents on three unknown salt solutions and deduce every cation and anion from the evidence. Interactive qualitative analysis detective bench.',
+      keywords: ['ion identification virtual lab', 'flame test simulator online', 'qualitative analysis virtual', 'cation anion test experiment', 'precipitate identification game'],
+    },
+  },
+  {
+    slug: 'rusting-conditions',
+    docsSlug: 'rusting-of-iron-conditions-virtual-lab',
+    title: 'Rusting conditions',
+    subject: 'Chemistry',
+    tier: 'Explorer',
+    tagline: 'Leave iron nails in air, water and salt water \u2014 then watch time decide.',
+    status: 'live',
+    experimentNo: 22,
+    seo: {
+      title: 'Rusting of Iron Virtual Lab \u2014 Conditions for Rust Experiment',
+      description:
+        'Prepare four iron nails in dry air, boiled water under oil, tap water and salt water, then fast-forward days and plot the rust curves. Interactive corrosion experiment with a waterline detail.',
+      keywords: ['rusting of iron virtual lab', 'conditions for rusting experiment', 'corrosion simulation online', 'iron nail salt water rust', 'rust prevention boiled water'],
+    },
+  },
+  {
+    slug: 'exothermic-endothermic',
+    docsSlug: 'exothermic-and-endothermic-reactions-virtual-lab',
+    title: 'Exothermic vs endothermic',
+    subject: 'Chemistry',
+    tier: 'Builder',
+    tagline: 'Dissolve, dilute and neutralise while live thermometers rise and fall.',
+    status: 'live',
+    experimentNo: 23,
+    seo: {
+      title: 'Exothermic and Endothermic Virtual Lab \u2014 Temperature Change Simulator',
+      description:
+        'Dissolve sodium hydroxide, potassium nitrate, ammonium chloride and more in a calorimeter cup, stir with a glass rod and classify each reaction by its live temperature trace. Interactive thermochemistry bench.',
+      keywords: ['exothermic endothermic virtual lab', 'temperature change reactions online', 'dissolving ammonium nitrate cooling', 'calorimetry simulator free', 'thermochemistry experiment interactive'],
+    },
+  },
+  {
+    slug: 'reaction-rate',
+    docsSlug: 'rate-of-reaction-virtual-lab',
+    title: 'Rate of reaction',
+    subject: 'Chemistry',
+    tier: 'Master',
+    tagline: 'Vary concentration, temperature and surface area \u2014 then race the curves.',
+    status: 'live',
+    experimentNo: 24,
+    seo: {
+      title: 'Rate of Reaction Virtual Lab \u2014 Concentration Temperature Surface Area',
+      description:
+        'Race marble chips and hydrochloric acid at different concentrations, temperatures and powder sizes while a gas syringe plots every curve. Interactive rate of reaction experiment with half-time analysis.',
+      keywords: ['rate of reaction virtual lab', 'concentration temperature experiment online', 'gas syringe simulation', 'marble chips acid rate curve', 'surface area reaction speed'],
+    },
+  },
+  {
+    slug: 'copper-plating',
+    docsSlug: 'copper-electroplating-virtual-lab',
+    title: 'Copper plating',
+    subject: 'Chemistry',
+    tier: 'Master',
+    tagline: 'Electroplate an iron nail and watch the pink copper deposit grow.',
+    status: 'live',
+    experimentNo: 25,
+    seo: {
+      title: 'Copper Electroplating Virtual Lab \u2014 Plate an Iron Nail with Copper',
+      description:
+        'Close the switch on a copper sulfate cell, watch pink copper grow on the nail while the anode dissolves, then swap the clips and reverse it. Faraday-law honest electroplating simulator with a balance.',
+      keywords: ['copper electroplating virtual lab', 'electroplating simulation online', 'plate iron nail copper sulfate', 'faraday law electrolysis experiment', 'anode cathode plating game'],
+    },
+  },
+  {
+    slug: 'water-of-crystallization',
+    docsSlug: 'water-of-crystallisation-copper-sulfate-virtual-lab',
+    title: 'Water of crystallisation',
+    subject: 'Chemistry',
+    tier: 'Master',
+    tagline: 'Bake blue copper sulfate to white dust \u2014 then bring the blue back.',
+    status: 'live',
+    experimentNo: 26,
+    seo: {
+      title: 'Water of Crystallisation Virtual Lab \u2014 Copper Sulfate Dehydration',
+      description:
+        'Heat blue copper sulfate crystals in a crucible, watch the mass fall and the colour turn white, compute x in CuSO4\u00b7xH2O from your own data, then rehydrate and see the blue flash back. Interactive experiment.',
+      keywords: ['water of crystallisation virtual lab', 'copper sulfate dehydration experiment', 'cuso4 5h2o heating simulation', 'calculate x hydrate virtual', 'anhydrous copper sulfate blue'],
+    },
+  },
+  {
+    slug: 'particle-model-diffusion',
+    docsSlug: 'particle-model-and-diffusion-virtual-lab',
+    title: 'Particles & diffusion',
+    subject: 'Chemistry',
+    tier: 'Explorer',
+    tagline: 'Open a divider and watch gases mix themselves, one collision at a time.',
+    status: 'live',
+    experimentNo: 27,
+    seo: {
+      title: 'Diffusion Virtual Lab \u2014 Particle Model of Gases Simulator',
+      description:
+        'Drag open a glass divider and watch a heavy orange gas mix with air through honest molecular dynamics. Change temperature and gas mass, race the mixing curves and spray a perfume burst. Free particle model simulator.',
+      keywords: ['diffusion virtual lab', 'particle model of gases simulation', 'bromine jar experiment online', 'gas mixing simulator interactive', 'maxwell boltzmann distribution virtual'],
+    },
+  },
 ];
+
 
 const biology: LabMeta[] = [
   { slug: 'virtual-microscope', docsSlug: 'virtual-microscope-lab-onion-cheek-cells', title: 'Virtual microscope', subject: 'Biology', tier: 'Explorer', tagline: 'Turn real focus knobs and examine onion and cheek cell slides.', status: 'roadmap', experimentNo: 28, seo: { title: 'Virtual Microscope Lab', description: 'Focus and examine cell slides.', keywords: ['virtual microscope lab'] } },

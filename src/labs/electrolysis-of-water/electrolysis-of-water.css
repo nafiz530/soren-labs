@@ -1,0 +1,80 @@
+/* Electrolysis-of-water-lab-specific styles (everything shared lives in engine.css). */
+
+/* Stopwatch card (same pattern as the pendulum bench, kept local so this lab
+   never depends on another lab's stylesheet loading). */
+.stopwatch{display:flex;flex-direction:column;gap:4px;padding:12px 14px;border:1px solid var(--lab-line);border-radius:10px;background:#f7f9fb}
+.stopwatch>span{font-size:9px;font-weight:800;letter-spacing:1px;color:#8b97a5}
+.stopwatch>strong{font-family:Manrope,sans-serif;font-size:30px;font-weight:800;letter-spacing:-1px;color:#172334}
+.stopwatch>strong.running{color:#e8632a}
+.count-line{display:flex;align-items:center;gap:8px;margin-top:2px}
+.count-line>span{font-size:10px;font-weight:700;color:#536276}
+.count-line>div{flex:1;height:5px;background:#e3e8ef;border-radius:5px;overflow:hidden}
+.count-line>div>span{display:block;height:100%;background:linear-gradient(90deg,#f9a46a,#f97316);border-radius:5px;transition:width .25s}
+
+.elec-top-row{display:grid;grid-template-columns:minmax(160px,auto) minmax(0,1fr);gap:14px;align-items:stretch}
+.elec-top-row .action-button{min-width:180px}
+
+.elec-live-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.elec-live{
+  display:flex;flex-direction:column;gap:2px;flex:1;min-width:110px;
+  padding:10px 14px;border:1px solid var(--lab-line);border-radius:10px;background:#f7f9fb;
+}
+.elec-live>span{font-size:8.5px;font-weight:800;letter-spacing:1.1px;color:#8b97a5}
+.elec-live>strong{font-family:Manrope,sans-serif;font-size:21px;font-weight:800;letter-spacing:-.5px;color:var(--lab-ink)}
+.elec-live>strong small{font-size:10px;color:#8793a1;letter-spacing:0;margin-left:2px}
+.elec-live>strong.elec-ratio{color:#b3431f}
+
+.voltage-toggle{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+.voltage-toggle .seg{
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  min-height:60px;padding:12px 10px;
+  border:1px solid #d9e0e8;border-radius:12px;background:#fff;
+  transition:border-color .15s,background .15s,box-shadow .15s,transform .08s;
+}
+.voltage-toggle .seg:hover{border-color:var(--lab-accent)}
+.voltage-toggle .seg:active{transform:scale(.97)}
+.voltage-toggle .seg .seg-title{font-family:Manrope,sans-serif;font-size:16px;font-weight:800;letter-spacing:.6px;color:#435062}
+.voltage-toggle .seg .seg-sub{font-size:9px;font-weight:600;color:#9aa4b1;text-align:center}
+.voltage-toggle .seg.on{
+  border-color:#f0c9a8;background:linear-gradient(180deg,#fff8f2,#fdeedd);
+  box-shadow:0 6px 16px #f973161d;
+}
+.voltage-toggle .seg.on .seg-title{color:#b3431f}
+.voltage-toggle .seg.on .seg-sub{color:#c2560f}
+
+.splint-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.splint-button{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  min-height:56px;padding:11px 12px;
+  border:1px solid #d9e0e8;border-radius:12px;background:#fff;
+  font-size:11px;font-weight:800;color:#435062;
+  transition:border-color .15s,background .15s,transform .08s;
+}
+.splint-button:hover:not(:disabled){border-color:var(--lab-accent);background:#fff8f2}
+.splint-button:active:not(:disabled){transform:scale(.97)}
+.splint-button:disabled{opacity:.45;cursor:not-allowed}
+.splint-button small{font-size:9px;font-weight:600;color:#9aa4b1;letter-spacing:0}
+
+.hint-row{display:flex;gap:8px;align-items:center;color:#8b97a5;font-size:9.5px;line-height:1.6;margin-top:14px}
+.hint-row span{color:#f97316;font-weight:800}
+
+.ratio-readout{margin-top:16px;padding:15px;border-radius:9px;background:#f7f9fb;border:1px solid var(--lab-line)}
+.ratio-readout>span{font-size:10px;color:#7c8998}
+.ratio-readout>strong{display:block;margin-top:4px;font-family:Manrope,sans-serif;font-size:29px;font-weight:800;letter-spacing:-1px;color:var(--lab-ink)}
+.ratio-readout>strong small{font-size:12px;color:#8793a1;letter-spacing:0;font-weight:700}
+.ratio-readout>p{margin:8px 0 0;font-size:9px;color:#8b97a5;line-height:1.6}
+
+.gas-chart-legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:9px;font-size:9.5px;font-weight:600;color:#8b97a5}
+.gas-chart-legend span{display:inline-flex;align-items:center;gap:6px}
+.gas-chart-legend i{width:12px;height:12px;border-radius:4px;border:1px solid #c9d2db;display:inline-block}
+
+@media(max-width:980px){
+  .elec-top-row{grid-template-columns:1fr}
+}
+@media(max-width:740px){
+  .elec-live{min-width:96px;padding:8px 11px}
+  .elec-live>strong{font-size:18px}
+  .voltage-toggle .seg{min-height:54px;padding:10px 6px}
+  .voltage-toggle .seg .seg-title{font-size:14px}
+  .splint-row{grid-template-columns:1fr}
+}

@@ -1,0 +1,62 @@
+/* Ink-chromatography-lab specific styles (everything shared lives in engine.css). */
+
+.chrom-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(240px,.6fr);gap:16px;align-items:stretch;margin-top:2px}
+.chrom-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.chrom-actions .action-button{min-height:64px}
+.chrom-stopwatch{grid-column:1/-1;display:flex;flex-direction:column;gap:4px;padding:12px 14px;border:1px solid var(--lab-line);border-radius:10px;background:#f7f9fb}
+.chrom-stopwatch>span{font-size:9px;font-weight:800;letter-spacing:1px;color:#8b97a5}
+.chrom-stopwatch>strong{font-family:Manrope,sans-serif;font-size:26px;letter-spacing:-1px;color:#172334}
+.chrom-stopwatch>strong.running{color:#e8632a}
+.count-line{display:flex;align-items:center;gap:8px;margin-top:2px}
+.count-line>span{font-size:10px;font-weight:700;color:#536276;white-space:nowrap}
+.count-line>div{flex:1;height:5px;background:#e3e8ef;border-radius:5px;overflow:hidden}
+.count-line>div>span{display:block;height:100%;background:linear-gradient(90deg,#f9a46a,#f97316);border-radius:5px;transition:width .25s}
+
+.chrom-selectors{display:flex;flex-direction:column;gap:14px;padding:12px 14px;border:1px solid var(--lab-line);border-radius:10px;background:#f7f9fb}
+.chrom-selectors label{display:flex;flex-direction:column;gap:6px;font-size:10px;font-weight:800;letter-spacing:.6px;color:#8b97a5;text-transform:uppercase}
+.chrom-selectors select{padding:10px 11px;border:1px solid #d9e0e8;border-radius:9px;background:#fff;font:inherit;font-size:12px;font-weight:700;color:#172334}
+.chrom-selectors select:disabled{opacity:.55;cursor:not-allowed}
+.chrom-selectors small{font-size:9px;font-weight:600;letter-spacing:0;text-transform:none;color:#8b97a5;line-height:1.5}
+
+/* identification card — the forensic verdict */
+.chrom-identify{margin-top:16px;padding:14px 15px;border:1px solid #f0c9a8;border-radius:12px;background:linear-gradient(180deg,#fff8f2,#fdeedd)}
+.chrom-identify-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.chrom-identify-head span{font-size:9px;font-weight:800;letter-spacing:1.2px;color:#c2560f}
+.chrom-identify-head b{padding:4px 10px;border-radius:20px;background:#f2e6d8;color:#8a6a45;font-size:9px;font-weight:800;letter-spacing:.4px;white-space:nowrap}
+.chrom-identify-head b.ready{background:#d8f0e0;color:#1e8e4e}
+.chrom-identify-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:stretch}
+.chrom-identify-row select{padding:11px 12px;border:1px solid #d9e0e8;border-radius:10px;background:#fff;font:inherit;font-size:12px;font-weight:700;color:#172334;min-width:0}
+.chrom-identify .record-button{margin-top:0;white-space:nowrap}
+.chrom-identify>small{display:block;margin-top:9px;font-size:9.5px;line-height:1.6;color:#8a6a45}
+
+.chrom-hint-row{display:flex;gap:8px;align-items:center;color:#8b97a5;font-size:9.5px;line-height:1.6;margin-top:14px}
+.chrom-hint-row span{color:#f97316;font-weight:800}
+
+/* sidebar Rf ruler — turns clicks into millimetres */
+.chrom-ruler{position:relative;height:238px;margin-top:14px;border:1px solid var(--lab-line);border-radius:10px;background:#f7f9fb;overflow:hidden}
+.chrom-ruler-area{position:absolute;left:0;right:0;top:8px;bottom:26px}
+.chrom-ruler-tick{position:absolute;left:0;right:0;display:flex;align-items:center;gap:4px}
+.chrom-ruler-tick span{flex:none;width:28px;text-align:right;font-size:8px;font-weight:800;color:#8b97a5}
+.chrom-ruler-tick i{flex:none;width:12px;height:1px;background:#b6c1cc}
+.chrom-ruler-front{position:absolute;left:44px;right:10px;height:2px;background:#f97316;border-radius:2px}
+.chrom-ruler-front em{position:absolute;right:0;bottom:4px;padding:2px 7px;border-radius:20px;background:#fdf1e7;color:#c2560f;font-size:8px;font-weight:800;font-style:normal;white-space:nowrap}
+.chrom-ruler-dot{position:absolute;width:10px;height:10px;border-radius:50%;border:1px solid #fff;box-shadow:0 1px 3px #17233433;transform:translateY(-50%)}
+.chrom-ruler-cap{position:absolute;left:0;right:0;bottom:0;padding:4px 10px;background:#eef2f6;border-top:1px solid var(--lab-line);font-size:8px;font-weight:700;letter-spacing:.6px;color:#8b97a5;text-align:center}
+
+/* colour swatch in the observations table */
+.chrom-dot{display:inline-block;width:10px;height:10px;border-radius:3px;border:1px solid #c9d2db;vertical-align:-1px;margin-right:5px}
+
+@media(max-width:980px){
+  .chrom-layout{grid-template-columns:minmax(0,1fr)}
+}
+@media(max-width:740px){
+  .chrom-actions{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+  .chrom-actions .action-button{min-height:58px;padding:9px 6px;font-size:11px}
+  .chrom-actions .action-button small{font-size:8px}
+  .chrom-identify-row{grid-template-columns:minmax(0,1fr)}
+  .chrom-identify .record-button{width:100%}
+}
+@media(max-width:540px){
+  .chrom-actions{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .chrom-stopwatch{grid-column:1/-1}
+}

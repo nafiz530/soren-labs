@@ -1,0 +1,82 @@
+/* Ion-identification-lab-specific styles (everything shared lives in engine.css). */
+
+/* sample selector chip row */
+.ion-selector{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.ion-selector-label{font-size:9px;font-weight:800;letter-spacing:1.4px;color:var(--lab-muted)}
+.ion-chip{
+  display:inline-flex;align-items:center;gap:7px;
+  min-height:38px;padding:8px 14px;
+  border:1px solid #d9e0e8;border-radius:10px;background:#fff;
+  font-size:11.5px;font-weight:700;color:#4a5769;
+  transition:border-color .15s,background .15s,box-shadow .15s;
+}
+.ion-chip i{width:12px;height:12px;border-radius:4px;border:1px solid rgba(23,35,52,.25)}
+.ion-chip:hover{border-color:#ffc79f;background:#fff8f2}
+.ion-chip.active{
+  border-color:var(--lab-accent);background:#fff4ea;color:#b3431f;
+  box-shadow:0 4px 12px #f973161f;
+}
+
+/* test buttons grid (burner + loop + 4 reagents + litmus) */
+.ion-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.ion-actions .action-button{min-height:64px;padding:10px 12px}
+.ion-actions .action-button small{font-size:8.5px;line-height:1.35;text-align:center}
+.ion-actions .dispense-icon .ion-dot{display:inline-block;width:10px;height:10px;border-radius:3px;border:1px solid rgba(23,35,52,.25);vertical-align:-1px;margin-right:6px}
+
+/* colour swatch reused in buttons and the evidence table */
+.ion-dot{display:inline-block;width:10px;height:10px;border-radius:3px;border:1px solid #c9d2db;vertical-align:-1px;margin-right:6px}
+
+/* case files: one card per unknown */
+.ion-cases{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:16px}
+.ion-case{display:flex;flex-direction:column;gap:9px;padding:13px;border:1px solid var(--lab-line);border-radius:11px;background:#f7f9fb;transition:border-color .2s,background .2s}
+.ion-case.closed{border-color:#cfe8d8;background:#f4faf6}
+.ion-case-head{display:flex;align-items:center;gap:8px}
+.ion-case-head i{width:12px;height:12px;border-radius:4px;border:1px solid rgba(23,35,52,.25)}
+.ion-case-head strong{font-family:Manrope,sans-serif;font-size:13px;font-weight:800;color:var(--lab-ink)}
+.ion-case-head span{margin-left:auto;font-size:9px;font-weight:700;color:var(--lab-muted)}
+.ion-case.closed .ion-case-head span{color:#1e8e4e}
+.ion-case-fields{display:flex;flex-direction:column;gap:8px}
+.ion-case-fields select{
+  width:100%;min-height:38px;padding:8px 10px;
+  border:1px solid #d9e0e8;border-radius:9px;background:#fff;
+  font:inherit;font-size:11.5px;font-weight:600;color:var(--lab-ink);
+}
+.ion-close-btn{
+  min-height:40px;border:none;border-radius:9px;
+  background:linear-gradient(180deg,#f98a3c,#f97316);color:#fff;
+  font-size:11px;font-weight:800;letter-spacing:.2px;
+  box-shadow:0 6px 14px #f9731629;
+  transition:filter .15s,transform .1s;
+}
+.ion-close-btn:hover{filter:brightness(1.05)}
+.ion-close-btn:active{transform:scale(.985)}
+.ion-case-solved{display:flex;flex-direction:column;gap:3px;padding:10px 11px;border:1px solid #cfe8d8;border-radius:9px;background:#fff}
+.ion-case-solved strong{font-family:Manrope,sans-serif;font-size:14px;font-weight:800;color:#1e8e4e}
+.ion-case-solved small{font-size:10px;font-weight:600;color:var(--lab-muted)}
+
+/* the evidence table: four text-heavy columns */
+table.ion-evidence{table-layout:fixed}
+table.ion-evidence th,table.ion-evidence td{text-align:left;vertical-align:top}
+table.ion-evidence th:nth-child(1),table.ion-evidence td:nth-child(1){width:34px}
+table.ion-evidence th:nth-child(2),table.ion-evidence td:nth-child(2){width:31%}
+table.ion-evidence td{line-height:1.5}
+
+/* local duplicate of the shared hint row so this lab never depends on
+   another lab's stylesheet (engine.css owns the .hint-box variant) */
+.hint-row{display:flex;gap:8px;align-items:center;color:#8b97a5;font-size:9.5px;line-height:1.6;margin-top:14px}
+.hint-row span{color:#f97316;font-weight:800}
+
+@media(max-width:980px){
+  .ion-actions{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .ion-cases{grid-template-columns:1fr;gap:10px}
+}
+@media(max-width:740px){
+  .ion-actions{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .ion-actions .action-button{min-height:58px;padding:8px 10px}
+  .ion-selector{gap:6px}
+  .ion-chip{padding:8px 11px;font-size:10.5px}
+  table.ion-evidence th:nth-child(2),table.ion-evidence td:nth-child(2){width:26%}
+}
+@media(max-width:480px){
+  .ion-actions{grid-template-columns:1fr}
+}
